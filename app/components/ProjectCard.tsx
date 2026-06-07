@@ -48,7 +48,7 @@ const ProjectCard = () => {
                         <span className='text-[10px] text-[#9b9b9b]'>Active · 2024</span>
                     </div>
                     <a href='#'
-                       className='flex items-center gap-1 text-[10px] text-[#585858]
+                        className='flex items-center gap-1 text-[10px] text-[#585858]
                                   hover:text-[#1a1a1a] transition-colors'>
                         <IoLogoGithub />
                         Github

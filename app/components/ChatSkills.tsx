@@ -95,6 +95,9 @@ import {
 } from "react-icons/si";
 import { TbApi, TbRepeat, TbLayersIntersect, TbBinaryTree } from "react-icons/tb";
 import { BsFiletypeHtml, BsFiletypeCss } from "react-icons/bs";
+import Badge from "./Badge";
+import DownLoadResumeButton from "./DownLoadResumeButton";
+import ResponseFooter from "./ResponseFooter";
 
 const Pill = ({
   icon,
@@ -109,8 +112,8 @@ const Pill = ({
     "inline-flex items-center gap-2 px-3.5 py-2 rounded-[10px] border text-[13px] font-medium transition-all duration-150 cursor-default select-none hover:shadow-[0_0_0_3px_#fff7ec] hover:border-[#f5a623]";
 
   const styles = {
-    dark:   "bg-[#1a1a1a] text-white border-[#1a1a1a]",
-    light:  "bg-white text-[#1a1a1a] border-[#e4e4e2]",
+    dark: "bg-[#1a1a1a] text-white border-[#1a1a1a]",
+    light: "bg-white text-[#1a1a1a] border-[#e4e4e2]",
     accent: "bg-[#fff7ec] text-[#c47a0c] border-[#fde5b8]",
   };
 
@@ -133,75 +136,78 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 
 export default function Skills() {
   return (
-    <div className="flex-1 overflow-y-auto px-7 pt-7 pb-24">
+    <div className="flex-1 overflow-y-auto">
 
       {/* Header */}
-      <div className="flex items-center gap-2 mb-1.5">
-        <span className="inline-flex items-center gap-2 bg-[#f0f0ee] rounded-full px-3 py-1 text-[11px] font-semibold tracking-widest text-[#888] uppercase">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#f5a623]" />
-          SKILLS
-        </span>
+      <div className="flex items-center gap-2 mb-4">
+        <Badge text="Skills" />
         <span className="text-[11px] text-[#bbb]">26+ technologies</span>
       </div>
 
-      <h1 className="text-[22px] font-semibold text-[#1a1a1a] tracking-tight mb-1.5">
+      <h1 className="text-[22px] font-semibold text-[#1a1a1a] tracking-tight mb-2">
         My technical background
       </h1>
-      <p className="text-[13px] text-[#888] leading-relaxed mb-6 max-w-[520px]">
+      <p className="text-[13px] text-[#888] leading-relaxed mb-4 max-w-[520px]">
         Full-stack developer with strong roots in the JavaScript ecosystem. I build
         end-to-end — REST APIs, real-time systems, and polished React frontends.
       </p>
 
       {/* Frontend */}
       <Section title="Frontend">
-        <Pill variant="dark" icon={<SiReact color="#61dafb" />}        label="React" />
-        <Pill variant="dark" icon={<SiNextdotjs color="#fff" />}       label="Next.js" />
-        <Pill variant="dark" icon={<SiTailwindcss color="#38bdf8" />}  label="Tailwind CSS" />
-        <Pill variant="dark" icon={<SiShadcnui color="#fff" />}        label="shadcn/ui" />
-        <Pill variant="dark" icon={<SiJamstack color="#ef4444" />}     label="TanStack" />
+        <Pill variant="dark" icon={<SiReact color="#61dafb" />} label="React" />
+        <Pill variant="dark" icon={<SiNextdotjs color="#fff" />} label="Next.js" />
+        <Pill variant="dark" icon={<SiTailwindcss color="#38bdf8" />} label="Tailwind CSS" />
+        <Pill variant="dark" icon={<SiShadcnui color="#fff" />} label="shadcn/ui" />
+        <Pill variant="dark" icon={<SiJamstack color="#ef4444" />} label="TanStack" />
         <Pill variant="dark" icon={<BsFiletypeHtml color="#e34c26" />} label="HTML" />
-        <Pill variant="dark" icon={<BsFiletypeCss color="#2965f1" />}  label="CSS" />
+        <Pill variant="dark" icon={<BsFiletypeCss color="#2965f1" />} label="CSS" />
       </Section>
 
       {/* Languages */}
       <Section title="Languages">
-        <Pill icon={<SiJavascript color="#f0b429" />}  label="JavaScript" />
-        <Pill icon={<SiTypescript color="#3178c6" />}  label="TypeScript" />
-        <Pill icon={<SiPython color="#3572a5" />}      label="Python" />
-        <Pill icon={<SiPostgresql color="#336791" />}  label="SQL" />
+        <Pill icon={<SiJavascript color="#f0b429" />} label="JavaScript" />
+        <Pill icon={<SiTypescript color="#3178c6" />} label="TypeScript" />
+        <Pill icon={<SiPython color="#3572a5" />} label="Python" />
+        <Pill icon={<SiPostgresql color="#336791" />} label="SQL" />
       </Section>
 
       {/* Backend */}
       <Section title="Backend">
-        <Pill icon={<SiNodedotjs color="#5fa04e" />}    label="Node.js" />
-        <Pill icon={<SiExpress color="#888" />}         label="Express.js" />
-        <Pill icon={<SiPostgresql color="#336791" />}   label="PostgreSQL" />
-        <Pill icon={<SiMongodb color="#4db33d" />}      label="MongoDB" />
-        <Pill icon={<SiRedis color="#dc382d" />}        label="Redis" />
-        <Pill icon={<SiSupabase color="#3ecf8e" />}     label="Supabase" />
+        <Pill icon={<SiNodedotjs color="#5fa04e" />} label="Node.js" />
+        <Pill icon={<SiExpress color="#888" />} label="Express.js" />
+        <Pill icon={<SiPostgresql color="#336791" />} label="PostgreSQL" />
+        <Pill icon={<SiMongodb color="#4db33d" />} label="MongoDB" />
+        <Pill icon={<SiRedis color="#dc382d" />} label="Redis" />
+        <Pill icon={<SiSupabase color="#3ecf8e" />} label="Supabase" />
       </Section>
 
       {/* DevOps & Cloud */}
       <Section title="DevOps & Cloud">
-        <Pill icon={<SiDocker color="#2496ed" />}   label="Docker" />
-        <Pill icon={<SiVercel color="#1a1a1a" />}   label="Vercel" />
-        <Pill icon={<SiNetlify color="#00ad9f" />}  label="Netlify" />
-        <Pill icon={<SiGithub color="#1a1a1a" />}   label="GitHub" />
+        <Pill icon={<SiDocker color="#2496ed" />} label="Docker" />
+        <Pill icon={<SiVercel color="#1a1a1a" />} label="Vercel" />
+        <Pill icon={<SiNetlify color="#00ad9f" />} label="Netlify" />
+        <Pill icon={<SiGithub color="#1a1a1a" />} label="GitHub" />
       </Section>
 
       {/* Tools */}
       <Section title="Tools">
-        <Pill icon={<SiPostman color="#ef5c00" />}  label="Postman" />
-        <Pill icon={<SiSwagger color="#85ea2d" />}  label="Swagger" />
+        <Pill icon={<SiPostman color="#ef5c00" />} label="Postman" />
+        <Pill icon={<SiSwagger color="#85ea2d" />} label="Swagger" />
       </Section>
 
       {/* Concepts */}
       <Section title="Concepts">
-        <Pill variant="accent" icon={<TbBinaryTree color="#d4820a" />}      label="DSA" />
-        <Pill variant="accent" icon={<TbRepeat color="#d4820a" />}          label="Agile" />
+        <Pill variant="accent" icon={<TbBinaryTree color="#d4820a" />} label="DSA" />
+        <Pill variant="accent" icon={<TbRepeat color="#d4820a" />} label="Agile" />
         <Pill variant="accent" icon={<TbLayersIntersect color="#d4820a" />} label="MVC" />
-        <Pill variant="accent" icon={<TbApi color="#d4820a" />}             label="REST APIs" />
+        <Pill variant="accent" icon={<TbApi color="#d4820a" />} label="REST APIs" />
       </Section>
+
+      <div className='mt-4'>
+        <DownLoadResumeButton />
+      </div>
+
+      <ResponseFooter />
 
     </div>
   );
