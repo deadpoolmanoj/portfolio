@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image';
 import Badge from './Badge';
 import { GitBranch, MoveUpRight } from 'lucide-react';
+import { IoLogoGithub } from "react-icons/io";
 
 const ProjectCard = () => {
     return (
@@ -49,7 +50,7 @@ const ProjectCard = () => {
                     <a href='#'
                        className='flex items-center gap-1 text-[10px] text-[#585858]
                                   hover:text-[#1a1a1a] transition-colors'>
-                        <GitBranch size={11} />
+                        <IoLogoGithub />
                         Github
                         <MoveUpRight size={11} />
                     </a>
