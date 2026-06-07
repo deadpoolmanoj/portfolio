@@ -3,7 +3,7 @@ import React from 'react'
 
 const ResponseFooter = () => {
     return (
-        <div className='flex gap-3 mt-3 pt-3 border-t border-[#e9ecef]'>
+        <div className='flex gap-3 mt-3 pt-3 border-t border-[#e9ecef] pb-4'>
             <button className='p-1.5 rounded-full hover:bg-[#f8f9fa] text-[#9b9b9b]
                                    transition-colors'>
                 <RotateCw size={14} />

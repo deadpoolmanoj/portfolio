@@ -5,12 +5,19 @@ import Image from "next/image";
 import { JSX, ReactNode, useState } from "react";
 import Chats from "./components/Chats";
 import { SYSTEM_PROMPT } from "@/utils/prompts";
+import ChatProjects from "./components/ChatProjects";
 
 export type Message =
   | {
     id: string;
     role: "user" | "assistant";
     type: "text";
+    content: string;
+  }
+  | {
+    id: string;
+    role: "assistant";
+    type: "loading";
     content: string;
   }
   | {
@@ -24,55 +31,71 @@ export default function Home() {
   const [noChatsYet, setNoChatsYet] = useState(true);
   const [message, setMessage] = useState("")
 
-  const [messages, setMessages] = useState<Message[]>([{
-    id: crypto.randomUUID(),
-    role: 'user',
-    type: "text",
-    content: "Tell about manojs project"
-  }]);
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  async function sendUserMessage() {
-    if (!message.trim()) return;
+  type Intent = 'projects' | 'skills' | 'education' | 'text';
+
+  function x(message: string): Intent {
+    const text = message.toLowerCase();
+
+    if (text.includes('project')) return 'projects';
+    if (text.includes('skill')) return 'skills';
+    if (text.includes('education')) return 'education';
+
+    return 'text';
+  }
+
+  async function sendUserMessage(msg?: string) {
+    const content = msg ?? message;
+
+    if (!content.trim()) return;
+
+    const intent = x(content);
+    const loadingId = crypto.randomUUID();
 
     setMessages(prev => [
       ...prev,
       {
         id: crypto.randomUUID(),
-        role: "assistant",
-        content: message,
-        type: "projects"
-      },
-      {
-        id: crypto.randomUUID(),
-        role: 'user',
+        role: "user",
         type: "text",
-        content: "Tell about manoj's skills"
+        content,
       },
       {
-        id: crypto.randomUUID(),
+        id: loadingId,
         role: "assistant",
-        content: message,
-        type: "skills"
-      },
-      {
-        id: crypto.randomUUID(),
-        role: 'user',
-        type: "text",
-        content: "tell about manojs education"
-      },
-      {
-        id: crypto.randomUUID(),
-        role: "assistant",
-        content: message,
-        type: "education"
+        type: "loading",
+        content: "Thinking...",
       },
     ]);
 
     setMessage("");
     setNoChatsYet(false);
+
+    setTimeout(() => {
+      setMessages(prev =>
+        prev.map(message => {
+          if (message.id !== loadingId) return message;
+
+          if (intent === "projects") {
+            return {
+              id: crypto.randomUUID(),
+              role: "assistant",
+              type: "projects",
+              content: <ChatProjects />,
+            };
+          }
+
+          return {
+            id: crypto.randomUUID(),
+            role: "assistant",
+            type: "text",
+            content: "I couldn't find a matching section yet.",
+          };
+        })
+      );
+    }, 2000);
   }
-
-
 
   async function askClaude() {
     const res = await fetch('/api/chat', {
@@ -131,7 +154,11 @@ export default function Home() {
                 <ul className='bg-white rounded-xl border border-[#e9ecef] overflow-hidden'>
                   <li className='w-full flex justify-between items-center px-3 py-2.5 gap-2
                        hover:bg-[#f8f9fa] text-[13px] text-[#1a1a1a] cursor-pointer
-                       border-b border-[#f0f0f0]'>
+                       border-b border-[#f0f0f0]'
+                    onClick={() => {
+                      // setMessage("Tell me about Manoj's technical background.");
+                      sendUserMessage("Tell me about Manoj's technical background.");
+                    }}>
                     <span className='flex items-center gap-2.5'>
                       <span>⚡</span> Tell me about Manoj's technical background.
                     </span>
@@ -139,7 +166,11 @@ export default function Home() {
                   </li>
                   <li className='w-full flex justify-between items-center px-3 py-2.5 gap-2
                        hover:bg-[#f8f9fa] text-[13px] text-[#1a1a1a] cursor-pointer
-                       border-b border-[#f0f0f0]'>
+                       border-b border-[#f0f0f0]'
+                    onClick={() => {
+                      setMessage("What projects has he built recently?");
+                      sendUserMessage("What projects has he built recently?");
+                    }}>
                     <span className='flex items-center gap-2.5'>
                       <span>📂</span> What projects has he built recently?
                     </span>
@@ -148,14 +179,22 @@ export default function Home() {
                   <li className='w-full flex justify-between items-center px-3 py-2.5 gap-2
                        hover:bg-[#f8f9fa] text-[13px] text-[#1a1a1a] cursor-pointer
                        border-b border-[#f0f0f0]'>
-                    <span className='flex items-center gap-2.5'>
+                    <span className='flex items-center gap-2.5'
+                      onClick={() => {
+                        setMessage("Can I see or download a copy of his resume?");
+                        sendUserMessage("Can I see or download a copy of his resume?");
+                      }}>
                       <span>📄</span> Can I see or download a copy of his resume?
                     </span>
                     <ChevronRight size={13} className='text-[#9b9b9b] shrink-0' />
                   </li>
                   <li className='w-full flex justify-between items-center px-3 py-2.5 gap-2
                        hover:bg-[#f8f9fa] text-[13px] text-[#1a1a1a] cursor-pointer'>
-                    <span className='flex items-center gap-2.5'>
+                    <span className='flex items-center gap-2.5'
+                      onClick={() => {
+                        setMessage("How is his expertise in Data Structures and Algorithms (DSA)?");
+                        sendUserMessage("How is his expertise in Data Structures and Algorithms (DSA)?");
+                      }}>
                       <span>🧠</span> How is his expertise in Data Structures and Algorithms (DSA)?
                     </span>
                     <ChevronRight size={13} className='text-[#9b9b9b] shrink-0' />
@@ -197,7 +236,7 @@ export default function Home() {
               ↵ enter to send · shift+enter for new line
             </span>
             <button
-              onClick={sendUserMessage}
+              onClick={() => sendUserMessage()}
               disabled={!message.trim()}
               className="bg-[#ffac81] disabled:opacity-40 disabled:cursor-not-allowed
                    p-2 rounded-full text-white transition-all duration-150

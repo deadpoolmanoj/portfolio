@@ -69,10 +69,10 @@ const ChatEducation = () => {
       </div>
 
       {/* Timeline */}
-      <div className="relative pl-8">
+      <div className="relative pl-8 mt-6">
 
         {/* Vertical Line */}
-        <div className="absolute left-[8px] top-2 bottom-2 w-[1.5px] bg-orange-500/20" />
+        <div className="absolute left-[9px] top-2 bottom-2 w-[1.5px] bg-orange-500/20" />
 
         {/* SSC */}
         <div className="relative mb-7">

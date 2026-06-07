@@ -4,6 +4,7 @@ import ChatProjects from './ChatProjects';
 import ChatSkills from './ChatSkills';
 import ChatEducation from './ChatEducation';
 import { Copy, Edit, Pen } from 'lucide-react';
+import ChatLoadingAnimation from './ChatloadingAnimation';
 
 const Chats = ({ messages }: { messages: Message[] }) => {
 
@@ -29,6 +30,8 @@ const Chats = ({ messages }: { messages: Message[] }) => {
 
                             case "education":
                                 return <ChatEducation />
+                            case "loading":
+                                return <ChatLoadingAnimation/>
 
                             default:
                                 return null;
