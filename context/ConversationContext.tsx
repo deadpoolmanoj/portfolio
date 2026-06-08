@@ -382,6 +382,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
             content: string;
         }[]
     ) {
+        return
         const res = await fetch("/api/chat", {
             method: "POST",
             headers: {

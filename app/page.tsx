@@ -17,7 +17,7 @@ export default function Home() {
   } = useConversation();
 
   return (
-    <div className="relative p-4 pt-16 md:pt-0 md:p-0 max-w-3xl w-full h-screen flex flex-col">
+    <div className="relative p-4 pt-16 md:pt-0 md:p-0 max-w-3xl w-full h-[100dvh] flex flex-col">
       <div className="w-full flex-1 chat-scroll overflow-y-auto md:px-6">
         {noChatsYet && (
           <div className="w-full flex justify-center items-center h-full px-4 pb-20">
