@@ -11,7 +11,7 @@ export type Role = 'user' | 'assistant'
 export type Message = {
     id: string;
     role: Role;
-    type: "projects" | "skills" | "education" | "text" | "loading";
+    type: "projects" | "skills" | "education" | "text" | "blogs" | "askManoj" | "resume" | "loading";
     content: string | ReactNode;
 
     feedback?: 'like' | 'dislike' | null;

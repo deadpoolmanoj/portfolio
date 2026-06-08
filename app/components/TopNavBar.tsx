@@ -3,7 +3,7 @@
 import { PanelLeft } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import SidebarContent from './SideBarContent';
-import { getUserEnvironment, UserWeather } from "@/utils/userMetaData";
+import { getUserEnvironment, UserEnvironment } from "@/utils/userMetaData";
 
 import {
     Sun,
@@ -12,14 +12,11 @@ import {
     CloudSnow,
 } from "lucide-react";
 
-export const fallbackWeather: UserWeather = {
+export const fallbackWeather: UserEnvironment = {
     city: "India",
     temperature: 0,
     weather: "Cloudy", // safest neutral default
-    time: {
-        time: "--:--",
-        period: "AM",
-    },
+    time: '0',
 };
 
 
@@ -44,7 +41,7 @@ function getWeatherIcon(condition?: string) {
 
 const TopNavBar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [weather, setWeather] = useState<UserWeather | null>(fallbackWeather);
+    const [weather, setWeather] = useState<UserEnvironment | null>(fallbackWeather);
 
     useEffect(() => {
         async function loadWeather() {
@@ -54,14 +51,15 @@ const TopNavBar = () => {
         loadWeather();
     }, []);
 
-    const condition = weather?.condition ?? "Cloudy";
+    const condition = weather?.weather ?? "Cloudy";
 
     return (
         <>
             {/* Top bar */}
             <nav className='fixed md:hidden top-0 left-0 right-0 z-40
-                      flex items-center justify-between
-                      h-12 px-4 bg-white '>
+                h-12 px-4 flex items-center justify-between overflow-hidden
+                bg-white/20 backdrop-blur-xl backdrop-saturate-200
+                border-b border-white/30 shadow-sm'>
 
                 <button
                     onClick={() => setDrawerOpen(true)}
@@ -81,7 +79,6 @@ const TopNavBar = () => {
                 <div className='w-8' />
             </nav>
 
-            {/* Backdrop */}
             {drawerOpen && (
                 <div
                     className='fixed inset-0 z-40 bg-black/10 md:hidden'
@@ -89,7 +86,7 @@ const TopNavBar = () => {
                 />
             )}
 
-            {/* Drawer */}
+
             <div className={`fixed top-0 left-0 z-[999] md:hidden w-72 h-screen bg-white
                       transition-transform duration-300 ease-in-out
                       ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}`}>

@@ -4,12 +4,12 @@ import { ArrowUp, ChevronRight, Cloud } from "lucide-react";
 import Chats from "./components/Chats";
 import { useConversation } from "@/context/ConversationContext";
 import { useEffect, useState } from "react";
-import { getUserEnvironment, UserWeather } from "@/utils/userMetaData";
+import { getUserEnvironment, UserEnvironment } from "@/utils/userMetaData";
 import { fallbackWeather } from "./components/TopNavBar";
 
 export default function Home() {
 
-  const [weather, setWeather] = useState<UserWeather | null>(fallbackWeather);
+  const [weather, setWeather] = useState<UserEnvironment | null>(fallbackWeather);
 
   useEffect(() => {
     async function loadWeather() {
@@ -32,7 +32,7 @@ export default function Home() {
   } = useConversation();
 
   return (
-    <div className="relative pt-16 md:pt-0 md:p-0  w-full h-[100dvh] flex flex-col items-center">
+    <div className="relative pt-10 md:pt-16   md:pt-0 md:p-0  w-full h-[100dvh] flex flex-col items-center">
       <div className="w-full flex-1 chat-scroll overflow-y-auto md:px-6 flex flex-col items-center">
         {noChatsYet && (
           <div className="w-full flex justify-center items-center h-full px-4 pb-20">
@@ -45,11 +45,8 @@ export default function Home() {
 
               {/* Time + location */}
               <div className='flex items-center gap-1.5 mb-4'>
-                {/* <span className='text-[12px] font-medium text-[#1a1a1a]'>
-                  6:21<sup className='text-[9px] font-normal'>PM</sup>
-                </span> */}
                 <span className='text-[#ccc]'>·</span>
-                <span className='text-[12px] text-[#585858]'>{weather.city} {weather.temperature}°</span>
+                <span className='text-[12px] text-[#585858]'>{weather?.city} {weather?.temperature}°</span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                   stroke="#9b9b9b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z" />

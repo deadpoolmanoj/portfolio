@@ -20,7 +20,7 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
         switchConversation,
     } = useConversation();
 
-    function typeSelected(type: "projects" | "skills" | "education") {
+    function typeSelected(type: "projects" | "skills" | "education" | "blogs" | "resume" | "askManoj") {
         const currentConversation = conversations.find(c => c.id === activeConvoId);
         const existingMessage = currentConversation?.messages.find(m => m.type === type);
 
