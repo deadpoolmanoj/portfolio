@@ -1,23 +1,49 @@
-import React from 'react'
-import { Message } from '../page';
+'use client'
+
+import React, { useEffect, useRef } from 'react'
 import ChatProjects from './ChatProjects';
 import ChatSkills from './ChatSkills';
 import ChatEducation from './ChatEducation';
-import { Copy, Edit, Pen } from 'lucide-react';
+import { Copy, Pen } from 'lucide-react';
 import ChatLoadingAnimation from './ChatloadingAnimation';
 import ReactMarkdown from "react-markdown";
+import { Message } from '@/context/ConversationContext';
 
 const Chats = ({ messages }: { messages: Message[] }) => {
+    const lastScrolledUserMessage = useRef<string | null>(null);
+
+    useEffect(() => {
+        const latestUserMessage = [...messages]
+            .reverse()
+            .find(msg => msg.role === "user");
+
+        if (!latestUserMessage) return;
+
+        if (lastScrolledUserMessage.current === latestUserMessage.id) {
+            return;
+        }
+
+        lastScrolledUserMessage.current = latestUserMessage.id;
+
+        document
+            .getElementById(`message-${latestUserMessage.id}`)
+            ?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+    }, [messages]);
 
     return (
         <div className='w-full h-full pt-4'>
             {messages.map((msg) => (
                 <div
                     key={msg.id}
-                    className={`flex ${msg.role === "user"
-                        ? "justify-end"
-                        : "justify-start"
-                        }`}
+                    id={`message-${msg.id}`}
+                    className={`flex ${
+                        msg.role === "user"
+                            ? "justify-end"
+                            : "justify-start"
+                    }`}
                 >
                     {(() => {
                         switch (msg.type) {
@@ -26,11 +52,11 @@ const Chats = ({ messages }: { messages: Message[] }) => {
                             case "projects":
                                 return <ChatProjects />;
                             case "skills":
-                                return <ChatSkills />
+                                return <ChatSkills />;
                             case "education":
-                                return <ChatEducation />
+                                return <ChatEducation />;
                             case "loading":
-                                return <ChatLoadingAnimation />
+                                return <ChatLoadingAnimation />;
                             default:
                                 return null;
                         }
@@ -38,8 +64,8 @@ const Chats = ({ messages }: { messages: Message[] }) => {
                 </div>
             ))}
         </div>
-    )
-}
+    );
+};
 
 const TextMsg = ({ message }: { message: Message }) => {
     return (
@@ -112,52 +138,49 @@ const TextMsg = ({ message }: { message: Message }) => {
                 <div className='w-full flex items-end flex-col group mt-6'>
                     <span
                         className="
-            inline-block
-            max-w-[80%]
-            rounded-[20px]
-            rounded-br-[4px]
-            border
-            border-zinc-200/70
-            px-[18px]
-            py-[11px]
-            text-sm
-            leading-[1.55]
-            tracking-[-0.01em]
-            text-zinc-900
-            bg-zinc-100/60
-            font-normal
-            select-text
-        "
+                            inline-block
+                            max-w-[80%]
+                            rounded-[20px]
+                            rounded-br-[4px]
+                            border
+                            border-zinc-200/70
+                            px-[18px]
+                            py-[11px]
+                            text-sm
+                            leading-[1.55]
+                            tracking-[-0.01em]
+                            text-zinc-900
+                            bg-zinc-100/60
+                            font-normal
+                            select-text
+                        "
                     >
                         {message.content}
                     </span>
 
                     <div
                         className="
-            mt-1
-            flex items-center gap-1
-
-            opacity-0
-            pointer-events-none
-
-            transition-opacity
-            duration-150
-            ease-in-out
-
-            group-hover:opacity-100
-            group-hover:pointer-events-auto
-        "
+                            mt-1
+                            flex items-center gap-1
+                            opacity-0
+                            pointer-events-none
+                            transition-opacity
+                            duration-150
+                            ease-in-out
+                            group-hover:opacity-100
+                            group-hover:pointer-events-auto
+                        "
                     >
                         <button
                             className="
-                flex items-center justify-center
-                h-7 w-7
-                rounded-full
-                text-zinc-500
-                hover:bg-zinc-100
-                hover:text-zinc-900
-                transition-colors
-            "
+                                flex items-center justify-center
+                                h-7 w-7
+                                rounded-full
+                                text-zinc-500
+                                hover:bg-zinc-100
+                                hover:text-zinc-900
+                                transition-colors
+                            "
                             aria-label="Copy message"
                         >
                             <Copy size={12} />
@@ -165,14 +188,14 @@ const TextMsg = ({ message }: { message: Message }) => {
 
                         <button
                             className="
-                flex items-center justify-center
-                h-7 w-7
-                rounded-full
-                text-zinc-500
-                hover:bg-zinc-100
-                hover:text-zinc-900
-                transition-colors
-            "
+                                flex items-center justify-center
+                                h-7 w-7
+                                rounded-full
+                                text-zinc-500
+                                hover:bg-zinc-100
+                                hover:text-zinc-900
+                                transition-colors
+                            "
                             aria-label="Edit message"
                         >
                             <Pen size={12} />
@@ -184,4 +207,4 @@ const TextMsg = ({ message }: { message: Message }) => {
     );
 };
 
-export default Chats
+export default Chats;

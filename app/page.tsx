@@ -19,7 +19,7 @@ export default function Home() {
 
   return (
     <div className="p-4 pt-16 md:pt-0 md:p-0 max-w-3xl w-full h-screen flex flex-col">
-      <div className="w-full flex-1 chat-scroll overflow-y-auto px-4">
+      <div className="w-full flex-1 chat-scroll overflow-y-auto md:px-4">
         {noChatsYet && (
           <div className="w-full flex justify-center items-start h-full overflow-y-auto py-6 px-4">
             <div className="flex flex-col text-center items-center w-full max-w-md">

@@ -8,12 +8,37 @@ import { useState } from 'react'
 const SideBar = () => {
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
-    const { conversations, startNewConversation, sendUserMessage } = useConversation();
+    const {
+        conversations,
+        activeConvoId,
+        startNewConversation,
+        sendUserMessage
+    } = useConversation();
 
-    function typeSelected(text: string) {
-        sendUserMessage(text)
+    function typeSelected(type: "projects" | "skills" | "education") {
+        const currentConversation = conversations.find(
+            c => c.id === activeConvoId
+        );
+
+        const existingMessage = currentConversation?.messages.find(
+            m => m.type === type
+        );
+
+        if (existingMessage) {
+            const el = document.getElementById(
+                `message-${existingMessage.id}`
+            );
+
+            el?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+
+            return;
+        }
+
+        sendUserMessage(type);
     }
-
 
     return (
         <div className={`${sidebarOpen ? 'w-72' : 'w-16'} hidden md:flex p-2 bg-white h-screen transition-all duration-200 ease-in-out overflow-hidden`}>
@@ -44,22 +69,22 @@ const SideBar = () => {
                         </li>
                         <li className={`flex gap-2.5 items-center px-3 py-2.5 rounded-xl
                                        hover:bg-white text-[13px] text-[#585858] cursor-pointer
-                                       transition-colors ${!sidebarOpen && 'justify-center'}`} 
-                                       onClick={() => typeSelected('projects')}>
+                                       transition-colors ${!sidebarOpen && 'justify-center'}`}
+                            onClick={() => typeSelected('projects')}>
                             <FolderKanban size={15} className='shrink-0' />
                             {sidebarOpen && 'Projects'}
                         </li>
                         <li className={`flex gap-2.5 items-center px-3 py-2.5 rounded-xl
                                        hover:bg-white text-[13px] text-[#585858] cursor-pointer
                                        transition-colors ${!sidebarOpen && 'justify-center'}`}
-                                       onClick={() => typeSelected('skills')}>
+                            onClick={() => typeSelected('skills')}>
                             <Wrench size={15} className='shrink-0' />
                             {sidebarOpen && 'Skills'}
                         </li>
                         <li className={`flex gap-2.5 items-center px-3 py-2.5 rounded-xl
                                        hover:bg-white text-[13px] text-[#585858] cursor-pointer
                                        transition-colors ${!sidebarOpen && 'justify-center'}`}
-                                       onClick={() => typeSelected('education')}>
+                            onClick={() => typeSelected('education')}>
                             <School size={15} className='shrink-0' />
                             {sidebarOpen && 'Education'}
                         </li>
