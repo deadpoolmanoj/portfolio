@@ -194,10 +194,8 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         }
 
         try {
-            const data = await askClaude(
-                editedContent,
-                activeConvoId
-            );
+            const history = buildHistory(activeConvoId, editedContent);
+            const data = await askClaude(history);
 
             replaceLoading(
                 activeConvoId,
@@ -333,30 +331,9 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         }
 
         try {
-            const currentConvo = conversations.find(
-                c => c.id === capturedConvoId
-            );
-
-            const history = [
-                ...(currentConvo?.messages ?? [])
-                    .filter(m => m.type === "text")
-                    .map(m => ({
-                        role: m.role,
-                        content: m.content as string,
-                    })),
-                {
-                    role: "user",
-                    content:
-                        result.hasSubIntent && result.context
-                            ? result.context
-                            : content,
-                },
-            ];
+           const history = buildHistory(capturedConvoId, content);
 
             const data = await askClaude(history);
-
-            console.log(data);
-
 
             replaceLoading(capturedConvoId, loadingId, {
                 id: crypto.randomUUID(),
@@ -374,6 +351,23 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
                 content: "Sorry, something went wrong. Please try again.",
             });
         }
+    }
+
+    function buildHistory(convoId: string, newUserMessage: string) {
+        const convo = conversations.find(c => c.id === convoId);
+
+        return [
+            ...(convo?.messages ?? [])
+                .filter(m => m.type === "text")
+                .map(m => ({
+                    role: m.role,
+                    content: m.content as string,
+                })),
+            {
+                role: "user",
+                content: newUserMessage,
+            },
+        ];
     }
 
     async function askClaude(

@@ -215,12 +215,7 @@ const ProjectRow = ({ project, isLast }: { project: Project; isLast: boolean }) 
   </div>
 );
 
-type Props = {
-  messageId: string;
-  feedback?: "like" | "dislike" | null;
-};
-
-const ChatProjects = ({ messageId, feedback }: Props) => (
+const ChatProjects = () => (
   <div className="w-full">
 
     {/* Header */}
@@ -281,8 +276,6 @@ const ChatProjects = ({ messageId, feedback }: Props) => (
     <div className="mt-4">
       <DownLoadResumeButton />
     </div>
-
-    <ResponseFooter messageId={messageId} feedback={feedback} />
   </div>
 );
 

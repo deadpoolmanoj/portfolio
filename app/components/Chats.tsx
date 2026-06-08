@@ -50,11 +50,37 @@ const Chats = ({ messages }: { messages: Message[] }) => {
                             case "text":
                                 return <TextMsg message={msg} />
                             case "projects":
-                                return <ChatProjects messageId={msg.id} feedback={msg.feedback}/>;
+                                return (
+                                    <div className="w-full">
+                                        <ChatProjects />
+                                        <ResponseFooter
+                                            messageId={msg.id}
+                                            feedback={msg.feedback}
+                                        />
+                                    </div>
+                                );
+
                             case "skills":
-                                return <ChatSkills messageId={msg.id} feedback={msg.feedback}/>;
+                                return (
+                                    <div className="w-full">
+                                        <ChatSkills />
+                                        <ResponseFooter
+                                            messageId={msg.id}
+                                            feedback={msg.feedback}
+                                        />
+                                    </div>
+                                );
+
                             case "education":
-                                return <ChatEducation messageId={msg.id} feedback={msg.feedback}/>;
+                                return (
+                                    <div className="w-full">
+                                        <ChatEducation />
+                                        <ResponseFooter
+                                            messageId={msg.id}
+                                            feedback={msg.feedback}
+                                        />
+                                    </div>
+                                );
                             case "loading":
                                 return <ChatLoadingAnimation />;
                             default:
@@ -135,7 +161,7 @@ const TextMsg = ({ message }: { message: Message }) => {
                     >
                         {message.content as string}
                     </ReactMarkdown>
-                    <ResponseFooter messageId={message.id} feedback={message.feedback}/>
+                    <ResponseFooter messageId={message.id} feedback={message.feedback} />
                 </div>
             ) : (
                 <div className='w-full flex items-end flex-col group mt-6'>

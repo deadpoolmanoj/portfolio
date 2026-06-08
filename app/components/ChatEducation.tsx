@@ -3,12 +3,7 @@ import Badge from './Badge';
 import DownLoadResumeButton from './DownLoadResumeButton';
 import ResponseFooter from './ResponseFooter';
 
-type Props = {
-  messageId: string;
-  feedback?: "like" | "dislike" | null;
-};
-
-const ChatEducation = ({ messageId, feedback }: Props) => {
+const ChatEducation = () => {
   return (
     <div className="w-full">
 
@@ -198,8 +193,6 @@ const ChatEducation = ({ messageId, feedback }: Props) => {
       <div className='mt-4'>
         <DownLoadResumeButton />
       </div>
-
-      <ResponseFooter messageId={messageId} feedback={feedback} />
     </div>
   )
 }
