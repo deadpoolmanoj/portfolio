@@ -333,12 +333,30 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         }
 
         try {
-            const data = await askClaude(
-                result.hasSubIntent && result.context
-                    ? result.context
-                    : content,
-                capturedConvoId
+            const currentConvo = conversations.find(
+                c => c.id === capturedConvoId
             );
+
+            const history = [
+                ...(currentConvo?.messages ?? [])
+                    .filter(m => m.type === "text")
+                    .map(m => ({
+                        role: m.role,
+                        content: m.content as string,
+                    })),
+                {
+                    role: "user",
+                    content:
+                        result.hasSubIntent && result.context
+                            ? result.context
+                            : content,
+                },
+            ];
+
+            const data = await askClaude(history);
+
+            console.log(data);
+
 
             replaceLoading(capturedConvoId, loadingId, {
                 id: crypto.randomUUID(),
@@ -358,28 +376,24 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         }
     }
 
-    async function askClaude(content: string, convoId: string) {
-        const convo = conversations.find(c => c.id === convoId);
-        return;
-        const history = (convo?.messages ?? [])
-            .filter(m => m.type === "text" && m.type !== "text")
-            .map(m => ({
-                role: m.role,
-                content: m.content as string,
-            }));
-
+    async function askClaude(
+        history: {
+            role: string;
+            content: string;
+        }[]
+    ) {
         const res = await fetch("/api/chat", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
-                messages: [
-                    ...history,
-                    { role: "user", content }],
+                messages: history,
             }),
         });
+
         return await res.json();
     }
-
     return (
         <ConversationContext.Provider value={{
             conversations,
