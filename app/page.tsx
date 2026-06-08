@@ -17,8 +17,8 @@ export default function Home() {
   } = useConversation();
 
   return (
-    <div className="relative p-4 pt-16 md:pt-0 md:p-0 max-w-3xl w-full h-[100dvh] flex flex-col">
-      <div className="w-full flex-1 chat-scroll overflow-y-auto md:px-6">
+    <div className="relative pt-16 md:pt-0 md:p-0  w-full h-[100dvh] flex flex-col items-center">
+      <div className="w-full flex-1 chat-scroll overflow-y-auto md:px-6 flex flex-col items-center">
         {noChatsYet && (
           <div className="w-full flex justify-center items-center h-full px-4 pb-20">
             <div className="flex flex-col items-center w-full max-w-sm">
@@ -117,60 +117,61 @@ export default function Home() {
         )}
 
         {!noChatsYet && (
-          <div className="pb-32">
+          <div className="pb-32 max-w-3xl w-full px-4 md:px-4 ">
             <Chats messages={conversations.find(c => c.id === activeConvoId)?.messages ?? []} />
           </div>
         )}
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 md:px-2 bg-white rounded-t-full">
-        <div className="rounded-3xl flex flex-col border border-[#e9ecef] bg-white
+      <div className="absolute bottom-0  max-w-3xl w-full px-2 md:px-0 gap-00 ">
+        <div className="bg-white border-b-white">
+          <div className="rounded-3xl flex flex-col border border-[#e9ecef] bg-white
                   shadow-[0_1px_4px_rgba(0,0,0,0.06)] p-[2px]">
-          <textarea
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
 
-                if (editMessageId) {
-                  saveEditedMessage();
-                } else {
-                  sendUserMessage();
+                  if (editMessageId) {
+                    saveEditedMessage();
+                  } else {
+                    sendUserMessage();
+                  }
                 }
-              }
-            }}
-            placeholder="Ask anything about Manoj..."
-            rows={1}
-            className="rounded-t-3xl px-5 pt-4 pb-2 bg-transparent
+              }}
+              placeholder="Ask anything about Manoj..."
+              rows={1}
+              className="rounded-t-3xl px-5 pt-4 pb-2 bg-transparent
                  text-[13px] text-[#1a1a1a] placeholder:text-[#9b9b9b]
                  outline-none ring-0 border-0 focus:border-0
                  resize-none focus:outline-none focus:ring-0
                  min-h-[44px] max-h-[120px] leading-relaxed"
-          />
-          <div className="w-full flex justify-between items-center px-3 pb-2 pt-1">
-            <span className="text-[11px] text-[#9b9b9b] select-none">
-              ↵ enter to send · shift+enter for new line
-            </span>
-            <button
-              onClick={() => {
-                if (editMessageId) {
-                  saveEditedMessage();
-                } else {
-                  sendUserMessage();
-                }
-              }}
-              disabled={!message.trim()}
-              className="bg-[#ffac81] disabled:opacity-40 disabled:cursor-not-allowed
+            />
+            <div className="w-full flex justify-between items-center px-3 pb-2 pt-1">
+              <span className="text-[11px] text-[#9b9b9b] select-none">
+                ↵ enter to send · shift+enter for new line
+              </span>
+              <button
+                onClick={() => {
+                  if (editMessageId) {
+                    saveEditedMessage();
+                  } else {
+                    sendUserMessage();
+                  }
+                }}
+                disabled={!message.trim()}
+                className="bg-[#ffac81] disabled:opacity-40 disabled:cursor-not-allowed
                    p-2 rounded-full text-white transition-all duration-150
                    hover:bg-[#ff9561] active:scale-95"
-            >
-              <ArrowUp size={16} strokeWidth={2.5} />
-            </button>
+              >
+                <ArrowUp size={16} strokeWidth={2.5} />
+              </button>
+            </div>
           </div>
         </div>
-
-        <p className="text-[11px] text-[#9b9b9b] text-center py-1.5 select-none">
+        <p className="text-[11px] bg-white text-[#9b9b9b] text-center py-1.5 select-none">
           Manoj's AI assistant · responses may not always be accurate
         </p>
       </div>
