@@ -115,6 +115,7 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
                 </li>
                 <li>
                     <button
+                        onClick={() => typeSelected("blogs")}
                         className={`w-full flex items-center gap-2.5 text-[12px] text-[#585858]
               font-medium hover:text-[#1a1a1a] hover:bg-[#f5f5f5] rounded-lg transition-colors
               ${sidebarOpen ? "px-3 py-2" : "p-2 justify-center"}`}
@@ -157,7 +158,7 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
             {/* Bud card */}
             {sidebarOpen && (
                 <div
-                    onClick={() => sendUserMessage("What is this portfolio about?")}
+                    onClick={() => sendUserMessage("ask manoj")}
                     className="mx-2 mb-2 p-3 rounded-xl border border-[#f0f0f0] bg-[#fafafa]
                flex items-center gap-2.5 cursor-pointer
                hover:bg-[#fff0eb] hover:border-[#ffe0d0]

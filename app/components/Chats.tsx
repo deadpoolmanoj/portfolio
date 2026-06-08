@@ -9,6 +9,8 @@ import ChatLoadingAnimation from './ChatloadingAnimation';
 import ReactMarkdown from "react-markdown";
 import { Message, useConversation } from '@/context/ConversationContext';
 import ResponseFooter from './ResponseFooter';
+import ChatBlogs from './ChatBlogs';
+import AskManoj from './AskManoj';
 
 const Chats = ({ messages }: { messages: Message[] }) => {
     const lastScrolledUserMessage = useRef<string | null>(null);
@@ -81,6 +83,26 @@ const Chats = ({ messages }: { messages: Message[] }) => {
                                         />
                                     </div>
                                 );
+                            case "blogs":
+                                return (
+                                    <div className='w-full'>
+                                        <ChatBlogs />
+                                        <ResponseFooter
+                                            messageId={msg.id}
+                                            feedback={msg.feedback}
+                                        />
+                                    </div>
+                                )
+                            case "askManoj":
+                                return (
+                                    <div className='w-full'>
+                                        <AskManoj />
+                                        <ResponseFooter
+                                            messageId={msg.id}
+                                            feedback={msg.feedback}
+                                        />
+                                    </div>
+                                )
                             case "loading":
                                 return <ChatLoadingAnimation />;
                             default:

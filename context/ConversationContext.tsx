@@ -189,7 +189,6 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
                     ),
                 }
             );
-
             return;
         }
 
@@ -279,6 +278,9 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         }
 
         const result = classifyUserInput(content);
+
+        console.log(result);
+        
 
         // Check if this section already exists in the current conversation
         if (result.intent !== "unknown" && !result.hasSubIntent) {

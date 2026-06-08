@@ -12,7 +12,7 @@ const TopNavBar = () => {
       {/* Top bar */}
       <nav className='fixed md:hidden top-0 left-0 right-0 z-40
                       flex items-center justify-between
-                      h-12 px-4 bg-white'>
+                      h-12 px-4 bg-white '>
 
         <button
           onClick={() => setDrawerOpen(true)}
@@ -46,7 +46,7 @@ const TopNavBar = () => {
       )}
 
       {/* Drawer */}
-      <div className={`fixed top-0 left-0 z-50 md:hidden w-72 h-screen bg-white
+      <div className={`fixed top-0 left-0 z-[999] md:hidden w-72 h-screen bg-white
                       transition-transform duration-300 ease-in-out
                       ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <SidebarContent

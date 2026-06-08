@@ -5,6 +5,7 @@ export type IntentType =
   | "skills"
   | "education"
   | "blogs"
+  | "askManoj"
   | "unknown";
 
 export type SkillsSubIntent =
@@ -86,6 +87,32 @@ const INTENT_KEYWORDS: { intent: IntentType; keywords: string[] }[] = [
       "blog", "blogs", "article", "articles", "write", "writes", "wrote",
       "post", "posts", "written", "writing", "read", "reads",
       "publish", "published", "newsletter", "content",
+    ],
+  },
+  {
+    intent: "askManoj",
+    keywords: [
+      "ask manoj",
+      "manoj",
+      "ask you",
+      "tell me about you",
+      "who are you",
+      "yourself",
+      "about you",
+      "what can you do",
+    ],
+  },
+  {
+    intent: "askManoj",
+    keywords: [
+      "ask manoj",
+      "manoj",
+      "ask you",
+      "tell me about you",
+      "who are you",
+      "yourself",
+      "about you",
+      "what can you do",
     ],
   },
 ];
@@ -456,6 +483,10 @@ export function classifyUserInput(input: string): ParsedIntent {
 
   if (intent === "blogs") {
     return { intent, hasSubIntent: false };
+  }
+
+  if (intent === "askManoj") {
+    return { intent, hasSubIntent: false, };
   }
 
   return { intent: "unknown", hasSubIntent: false };

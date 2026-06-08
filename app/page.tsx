@@ -123,7 +123,7 @@ export default function Home() {
         )}
       </div>
 
-      <div className="absolute bottom-0  max-w-3xl w-full px-2 md:px-0 gap-0 z-50">
+      <div className="absolute bottom-0  max-w-3xl w-full px-2 md:px-0 gap-0 z-30">
         <div className="bg-white border-b-white rounded-t-4xl">
           <div className="rounded-3xl flex flex-col border border-[#e9ecef] bg-white
                   shadow-[0_1px_4px_rgba(0,0,0,0.06)] p-[2px]">
