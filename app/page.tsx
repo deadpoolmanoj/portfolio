@@ -3,8 +3,23 @@
 import { ArrowUp, ChevronRight, Cloud } from "lucide-react";
 import Chats from "./components/Chats";
 import { useConversation } from "@/context/ConversationContext";
+import { useEffect, useState } from "react";
+import { getUserEnvironment, UserWeather } from "@/utils/userMetaData";
+import { fallbackWeather } from "./components/TopNavBar";
 
 export default function Home() {
+
+  const [weather, setWeather] = useState<UserWeather | null>(fallbackWeather);
+
+  useEffect(() => {
+    async function loadWeather() {
+      const data = await getUserEnvironment()
+      setWeather(data)
+    }
+    loadWeather();
+  }, []);
+
+
   const {
     conversations,
     activeConvoId,
@@ -30,11 +45,11 @@ export default function Home() {
 
               {/* Time + location */}
               <div className='flex items-center gap-1.5 mb-4'>
-                <span className='text-[12px] font-medium text-[#1a1a1a]'>
+                {/* <span className='text-[12px] font-medium text-[#1a1a1a]'>
                   6:21<sup className='text-[9px] font-normal'>PM</sup>
-                </span>
+                </span> */}
                 <span className='text-[#ccc]'>·</span>
-                <span className='text-[12px] text-[#585858]'>Bengaluru 24°</span>
+                <span className='text-[12px] text-[#585858]'>{weather.city} {weather.temperature}°</span>
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none"
                   stroke="#9b9b9b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9z" />
@@ -123,7 +138,7 @@ export default function Home() {
         )}
       </div>
 
-      <div className="absolute bottom-0  max-w-3xl w-full px-2 md:px-0 gap-0 z-30">
+      <div className="absolute bottom-0  max-w-3xl w-full px-2 md:px-2 gap-0 z-30">
         <div className="bg-white border-b-white rounded-t-4xl">
           <div className="rounded-3xl flex flex-col border border-[#e9ecef] bg-white
                   shadow-[0_1px_4px_rgba(0,0,0,0.06)] p-[2px]">

@@ -194,6 +194,10 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
 
         try {
             const history = buildHistory(activeConvoId, editedContent);
+
+            console.log(history);
+
+
             const data = await askClaude(history);
 
             replaceLoading(
@@ -279,9 +283,6 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
 
         const result = classifyUserInput(content);
 
-        console.log(result);
-        
-
         // Check if this section already exists in the current conversation
         if (result.intent !== "unknown" && !result.hasSubIntent) {
             const currentConversation = conversations.find(
@@ -333,7 +334,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         }
 
         try {
-           const history = buildHistory(capturedConvoId, content);
+            const history = buildHistory(capturedConvoId, content);
 
             const data = await askClaude(history);
 

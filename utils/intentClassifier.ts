@@ -6,6 +6,7 @@ export type IntentType =
   | "education"
   | "blogs"
   | "askManoj"
+  | "resume"
   | "unknown";
 
 export type SkillsSubIntent =
@@ -113,6 +114,19 @@ const INTENT_KEYWORDS: { intent: IntentType; keywords: string[] }[] = [
       "yourself",
       "about you",
       "what can you do",
+    ],
+  },
+  {
+    intent: "resume",
+    keywords: [
+      "resume",
+      "cv",
+      "curriculum vitae",
+      "download resume",
+      "view resume",
+      "manoj resume",
+      "portfolio resume",
+      "experience pdf",
     ],
   },
 ];
@@ -486,6 +500,10 @@ export function classifyUserInput(input: string): ParsedIntent {
   }
 
   if (intent === "askManoj") {
+    return { intent, hasSubIntent: false, };
+  }
+
+  if (intent === "resume") {
     return { intent, hasSubIntent: false, };
   }
 

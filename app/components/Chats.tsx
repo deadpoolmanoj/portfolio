@@ -11,6 +11,7 @@ import { Message, useConversation } from '@/context/ConversationContext';
 import ResponseFooter from './ResponseFooter';
 import ChatBlogs from './ChatBlogs';
 import AskManoj from './AskManoj';
+import ChatResume from './ChatResume';
 
 const Chats = ({ messages }: { messages: Message[] }) => {
     const lastScrolledUserMessage = useRef<string | null>(null);
@@ -97,6 +98,16 @@ const Chats = ({ messages }: { messages: Message[] }) => {
                                 return (
                                     <div className='w-full'>
                                         <AskManoj />
+                                        <ResponseFooter
+                                            messageId={msg.id}
+                                            feedback={msg.feedback}
+                                        />
+                                    </div>
+                                )
+                            case "resume":
+                                return (
+                                    <div className='w-full'>
+                                        <ChatResume />
                                         <ResponseFooter
                                             messageId={msg.id}
                                             feedback={msg.feedback}
