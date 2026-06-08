@@ -80,7 +80,7 @@ export default function Home() {
         )}
       </div>
 
-      <div className="w-full px-2">
+      <div className="w-full md:px-2">
         <div className="rounded-3xl flex flex-col border border-[#e9ecef] bg-white
                   shadow-[0_1px_4px_rgba(0,0,0,0.06)] p-[2px]">
           <textarea
