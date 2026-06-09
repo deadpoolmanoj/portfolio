@@ -11,16 +11,16 @@ import { TbApi, TbRepeat, TbLayersIntersect, TbBinaryTree } from "react-icons/tb
 import { BsFiletypeHtml, BsFiletypeCss } from "react-icons/bs";
 import Badge from "./Badge";
 import DownLoadResumeButton from "./DownLoadResumeButton";
-import ResponseFooter from "./ResponseFooter";
 
-const Pill = ({
-  icon,
-  label,
-}: {
-  icon: React.ReactNode;
-  label: string;
-}) => (
-  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-[#ebebeb] bg-white text-[12px] font-medium text-[#1a1a1a] cursor-default select-none">
+const Pill = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
+  <span
+    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[12px] font-medium cursor-default select-none"
+    style={{
+      border: "1px solid var(--color-badge-border)",
+      backgroundColor: "var(--color-bg-card)",
+      color: "var(--color-text-primary)",
+    }}
+  >
     <span className="text-[14px] leading-none">{icon}</span>
     {label}
   </span>
@@ -28,14 +28,17 @@ const Pill = ({
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <div className="mb-5">
-    <p className="text-[10px] font-medium uppercase tracking-widest text-[#9b9b9b] mb-2">
+    <p
+      className="text-[10px] font-medium uppercase tracking-widest mb-2"
+      style={{ color: "var(--color-text-muted)" }}
+    >
       {title}
     </p>
     <div className="flex flex-wrap gap-1.5">{children}</div>
   </div>
 );
 
-export default function Skills() {
+export default function ChatSkills() {
   return (
     <div className="w-full">
 
@@ -43,29 +46,31 @@ export default function Skills() {
       <div className="mb-4">
         <div className="flex items-center gap-2 mb-4">
           <Badge text="Skills" />
-          <span className="text-[11px] text-[#9b9b9b]">26+ technologies</span>
+          <span className="text-[11px]" style={{ color: "var(--color-text-muted)" }}>
+            26+ technologies
+          </span>
         </div>
 
-        <h1 className="text-[15px] font-medium text-[#1a1a1a] leading-snug mb-2">
+        <h1 className="text-[15px] font-medium leading-snug mb-2" style={{ color: "var(--color-text-primary)" }}>
           My technical background
         </h1>
 
         <div className="space-y-3">
-          <p className="text-[12px] text-[#585858] leading-relaxed">
+          <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
             Full-stack developer with strong roots in the
-            <span className="font-medium text-[#1a1a1a]"> JavaScript ecosystem</span>.
+            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> JavaScript ecosystem</span>.
             I build end-to-end —
-            <span className="font-medium text-[#1a1a1a]"> REST APIs</span>,
-            <span className="font-medium text-[#1a1a1a]"> real-time systems</span>, and
+            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> REST APIs</span>,
+            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> real-time systems</span>, and
             polished
-            <span className="font-medium text-[#1a1a1a]"> React frontends</span>.
+            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> React frontends</span>.
           </p>
 
-          <div className="border-l-2 border-[#e9ecef] pl-3">
-            <p className="text-[12px] text-[#585858] leading-relaxed">
+          <div className="pl-3" style={{ borderLeft: "2px solid var(--color-border)" }}>
+            <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
               The focus is always on writing clean, maintainable code that scales —
               not just making things work, but making them
-              <span className="font-medium text-[#1a1a1a]"> work well</span>.
+              <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> work well</span>.
             </p>
           </div>
         </div>
@@ -73,7 +78,6 @@ export default function Skills() {
 
       {/* Skill sections */}
       <div className="mt-4 space-y-1">
-
         <Section title="Frontend">
           <Pill icon={<SiReact color="#61dafb" />} label="React" />
           <Pill icon={<SiNextdotjs color="#1a1a1a" />} label="Next.js" />
@@ -118,11 +122,10 @@ export default function Skills() {
           <Pill icon={<TbLayersIntersect color="#585858" />} label="MVC" />
           <Pill icon={<TbApi color="#585858" />} label="REST APIs" />
         </Section>
-
       </div>
 
       {/* Footer */}
-      <p className="text-[12px] text-[#585858] leading-relaxed mt-4">
+      <p className="text-[12px] leading-relaxed mt-4" style={{ color: "var(--color-text-secondary)" }}>
         Feel free to ask about any of these technologies, how I've used them in
         projects, or what I'm currently exploring.
       </p>
@@ -130,7 +133,6 @@ export default function Skills() {
       <div className="mt-4">
         <DownLoadResumeButton />
       </div>
-
     </div>
   );
 }

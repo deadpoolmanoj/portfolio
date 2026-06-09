@@ -4,55 +4,124 @@
   --font-circular: "Circular Std", sans-serif;
 }
 
-
 html, body {
   margin: 0;
   padding: 0;
 }
 
-/* app/globals.css */
-
+/* ─── LIGHT THEME (default) ─────────────────────────────────── */
 :root {
-  --color-text-primary:   #1a1a1a;
-  --color-text-secondary: #585858;
-  --color-text-muted:     #9b9b9b;
-  --color-text-accent:    #ffac81;   /* your coral — keep consistent */
-  --color-border:         #e9ecef;
-  --color-bg-subtle:      #f8f9fa;
-  --color-bg-muted:       rgba(233, 236, 239, 0.4);
+  --color-text-primary:    #1a1a1a;
+  --color-text-secondary:  #585858;
+  --color-text-muted:      #9b9b9b;
+  --color-text-accent:     #ffac81;
+
+  --color-border:          #e9ecef;
+  --color-border-light:    #f0f0f0;
+  --color-border-accent:   #ffe0d0;
+
+  --color-bg-page:         #ffffff;
+  --color-bg-subtle:       #f8f9fa;
+  --color-bg-muted:        rgba(233, 236, 239, 0.4);
+  --color-bg-accent:       #fff0eb;
+  --color-bg-card:         #ffffff;
+  --color-bg-input:        #ffffff;
+
+  --color-accent:          #ffac81;
+  --color-accent-hover:    #ff9561;
+  --color-accent-disabled: rgba(255, 172, 129, 0.4);
+
+  --color-sidebar-bg:      #ffffff;
+  --color-sidebar-border:  #f0f0f0;
+  --color-sidebar-hover:   #f5f5f5;
+  --color-sidebar-active:  #f5f5f5;
+
+  --color-nav-bg:          rgba(255, 255, 255, 0.8);
+
+  --color-scrollbar:       #d4d4d8;
+
+  --color-badge-bg:        #f4f4f5;
+  --color-badge-text:      #3f3f46;
+  --color-badge-border:    #ebebeb;
+
+  --color-user-bubble-bg:  #f4f4f5;
+  --color-user-bubble-border: #e4e4e7;
+
+  --color-loading-dot:     #d4d4d8;
 }
 
-/* Typography scale */
+/* ─── DARK THEME ─────────────────────────────────────────────── */
+.dark {
+  --color-text-primary:    #f0f0f0;
+  --color-text-secondary:  #a0a0a0;
+  --color-text-muted:      #6b6b6b;
+  --color-text-accent:     #ffac81;
+
+  --color-border:          #2a2a2a;
+  --color-border-light:    #222222;
+  --color-border-accent:   #3d2a1e;
+
+  --color-bg-page:         #111111;
+  --color-bg-subtle:       #1a1a1a;
+  --color-bg-muted:        rgba(40, 40, 40, 0.6);
+  --color-bg-accent:       #2a1a10;
+  --color-bg-card:         #1a1a1a;
+  --color-bg-input:        #161616;
+
+  --color-accent:          #ffac81;
+  --color-accent-hover:    #ff9561;
+  --color-accent-disabled: rgba(255, 172, 129, 0.3);
+
+  --color-sidebar-bg:      #111111;
+  --color-sidebar-border:  #222222;
+  --color-sidebar-hover:   #1e1e1e;
+  --color-sidebar-active:  #242424;
+
+  --color-nav-bg:          rgba(17, 17, 17, 0.85);
+
+  --color-scrollbar:       #333333;
+
+  --color-badge-bg:        #222222;
+  --color-badge-text:      #a0a0a0;
+  --color-badge-border:    #2e2e2e;
+
+  --color-user-bubble-bg:  #1e1e1e;
+  --color-user-bubble-border: #2a2a2a;
+
+  --color-loading-dot:     #3a3a3a;
+}
+
+/* ─── TYPOGRAPHY SCALE ───────────────────────────────────────── */
 .text-display {
   font-family: var(--font-instrument-serif);
-  font-size: 1.5rem;        /* 24px — page headings */
+  font-size: 1.5rem;
   color: var(--color-text-primary);
   line-height: 1.2;
 }
 
 .text-heading {
   font-family: var(--font-geist-sans);
-  font-size: 0.9375rem;     /* 15px — card titles, section heads */
+  font-size: 0.9375rem;
   font-weight: 500;
   color: var(--color-text-primary);
 }
 
 .text-body {
   font-family: var(--font-geist-sans);
-  font-size: 0.8125rem;     /* 13px — chat messages, descriptions */
+  font-size: 0.8125rem;
   color: var(--color-text-primary);
   line-height: 1.65;
 }
 
 .text-caption {
   font-family: var(--font-geist-sans);
-  font-size: 0.75rem;       /* 12px — timestamps, badges, hints */
+  font-size: 0.75rem;
   color: var(--color-text-secondary);
 }
 
 .text-label {
   font-family: var(--font-geist-sans);
-  font-size: 0.625rem;      /* 10px — ALL CAPS labels, chip text */
+  font-size: 0.625rem;
   font-weight: 500;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -67,19 +136,18 @@ html, body {
   padding: 1px 6px;
   border-radius: 4px;
 }
-/* Hide scrollbar arrows/buttons */
+
+/* ─── SCROLLBAR ──────────────────────────────────────────────── */
 ::-webkit-scrollbar-button {
   display: none;
   width: 0;
   height: 0;
 }
 
-/* Hide corner */
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
 
-/* Hide resizer */
 ::-webkit-resizer {
   display: none;
 }
@@ -93,6 +161,6 @@ html, body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d4d4d8;
+  background: var(--color-scrollbar);
   border-radius: 9999px;
 }

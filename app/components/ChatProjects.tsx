@@ -104,7 +104,13 @@ const PROJECTS: Project[] = [
 ];
 
 const Thumb = ({ title }: { title: string }) => (
-  <div className="w-[72px] h-[52px] rounded-lg border border-[#f0f0f0] bg-[#fafafa] flex-shrink-0 flex items-center justify-center overflow-hidden relative">
+  <div
+    className="w-[72px] h-[52px] rounded-lg flex-shrink-0 flex items-center justify-center overflow-hidden relative"
+    style={{
+      border: "1px solid var(--color-border-light)",
+      backgroundColor: "var(--color-bg-subtle)",
+    }}
+  >
     <svg className="absolute inset-0 opacity-20 w-full h-full">
       <defs>
         <pattern
@@ -118,23 +124,28 @@ const Thumb = ({ title }: { title: string }) => (
       </defs>
       <rect width="100%" height="100%" fill={`url(#g-${title.replace(/\s/g, "")})`} />
     </svg>
-    <span className="text-[9px] font-medium text-[#9b9b9b] text-center leading-tight px-1.5 relative z-10">
+    <span
+      className="text-[9px] font-medium text-center leading-tight px-1.5 relative z-10"
+      style={{ color: "var(--color-text-muted)" }}
+    >
       {title}
     </span>
   </div>
 );
 
 const ProjectRow = ({ project, isLast }: { project: Project; isLast: boolean }) => (
-  <div className={`py-5 ${!isLast ? "border-b border-[#f0f0f0]" : ""}`}>
-
+  <div
+    className="py-5"
+    style={!isLast ? { borderBottom: "1px solid var(--color-border-light)" } : {}}
+  >
     {/* Top: thumbnail + title block */}
     <div className="flex gap-3 items-start mb-3">
       <Thumb title={project.title} />
-
       <div className="flex-1 min-w-0">
-        {/* Title + status + year */}
         <div className="flex items-center gap-2 flex-wrap mb-0.5">
-          <p className="text-[14px] font-medium text-[#1a1a1a]">{project.title}</p>
+          <p className="text-[14px] font-medium" style={{ color: "var(--color-text-primary)" }}>
+            {project.title}
+          </p>
           {project.status === "Active" && (
             <span className="text-[10px] font-medium bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
               Active
@@ -145,56 +156,52 @@ const ProjectRow = ({ project, isLast }: { project: Project; isLast: boolean }) 
               In Progress
             </span>
           )}
-          <span className="text-[11px] text-[#9b9b9b]">{project.year}</span>
+          <span className="text-[11px]" style={{ color: "var(--color-text-muted)" }}>
+            {project.year}
+          </span>
         </div>
 
-        {/* Institution */}
-        <p className="text-[12px] text-[#585858] mb-2">{project.institution}</p>
+        <p className="text-[12px] mb-2" style={{ color: "var(--color-text-secondary)" }}>
+          {project.institution}
+        </p>
 
-        {/* Stack badges */}
         <div className="flex flex-wrap gap-1.5">
-          {project.stack.map((s) => (
-            <Badge key={s} text={s} />
-          ))}
-          {project.extraStack.map((s) => (
-            <Badge key={s} text={s} />
-          ))}
+          {project.stack.map((s) => <Badge key={s} text={s} />)}
+          {project.extraStack.map((s) => <Badge key={s} text={s} />)}
         </div>
       </div>
     </div>
 
-    {/* Description */}
-    <p className="text-[12px] text-[#585858] leading-relaxed mb-1">
+    <p className="text-[12px] leading-relaxed mb-1" style={{ color: "var(--color-text-secondary)" }}>
       {project.description}
     </p>
-    <p className="text-[12px] text-[#585858] leading-relaxed mb-3">
+    <p className="text-[12px] leading-relaxed mb-3" style={{ color: "var(--color-text-secondary)" }}>
       {project.longDescription}
     </p>
 
-    {/* Highlights */}
-    <div className="border-l-2 border-[#e9ecef] pl-3 mb-3 space-y-1">
+    <div
+      className="pl-3 mb-3 space-y-1"
+      style={{ borderLeft: "2px solid var(--color-border)" }}
+    >
       {project.highlights.map((h, i) => (
-        <p key={i} className="text-[12px] text-[#585858] leading-relaxed">
+        <p key={i} className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
           {h}
         </p>
       ))}
     </div>
 
-    {/* Tags */}
     <div className="flex flex-wrap gap-1.5 mb-3">
-      {project.tags.map((t) => (
-        <Badge key={t} text={t} />
-      ))}
+      {project.tags.map((t) => <Badge key={t} text={t} />)}
     </div>
 
-    {/* Links */}
     <div className="flex items-center gap-2">
       {project.demo && (
         <a
           href={project.demo}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-[11px] font-medium text-white bg-[#1a1a1a] rounded-md px-3 py-1.5 no-underline"
+          className="inline-flex items-center gap-1.5 text-[11px] font-medium text-white rounded-md px-3 py-1.5 no-underline"
+          style={{ backgroundColor: "var(--color-text-primary)" }}
         >
           <ExternalLink size={11} />
           Live
@@ -205,7 +212,11 @@ const ProjectRow = ({ project, isLast }: { project: Project; isLast: boolean }) 
           href={project.github}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-[11px] font-medium text-[#1a1a1a] border border-[#e5e7eb] rounded-md px-3 py-1.5 no-underline"
+          className="inline-flex items-center gap-1.5 text-[11px] font-medium rounded-md px-3 py-1.5 no-underline"
+          style={{
+            color: "var(--color-text-primary)",
+            border: "1px solid var(--color-border)",
+          }}
         >
           <IoLogoGithub size={13} />
           Github
@@ -218,59 +229,56 @@ const ProjectRow = ({ project, isLast }: { project: Project; isLast: boolean }) 
 const ChatProjects = () => (
   <div className="w-full">
 
-    {/* Header */}
     <div className="mb-4">
       <div className="flex items-center gap-2 mb-4">
         <Badge text="Projects" />
-        <span className="text-[11px] text-[#9b9b9b]">4 selected works</span>
+        <span className="text-[11px]" style={{ color: "var(--color-text-muted)" }}>
+          4 selected works
+        </span>
       </div>
 
-      <h1 className="text-[15px] font-medium text-[#1a1a1a] leading-snug mb-2">
+      <h1 className="text-[15px] font-medium leading-snug mb-2" style={{ color: "var(--color-text-primary)" }}>
         Things I've built from scratch
       </h1>
 
       <div className="space-y-3">
-        <p className="text-[12px] text-[#585858] leading-relaxed">
+        <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
           A mix of tools, apps, and side projects — ranging from
-          <span className="font-medium text-[#1a1a1a]"> production systems</span> to
-          <span className="font-medium text-[#1a1a1a]"> open-source experiments</span>.
+          <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> production systems</span> to
+          <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> open-source experiments</span>.
           Each one solved a real problem I ran into while learning or working.
         </p>
 
-        <p className="text-[12px] text-[#585858] leading-relaxed">
+        <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
           The stack spans
-          <span className="font-medium text-[#1a1a1a]"> React</span>,
-          <span className="font-medium text-[#1a1a1a]"> Node.js</span>,
-          <span className="font-medium text-[#1a1a1a]"> Python</span>, and
-          <span className="font-medium text-[#1a1a1a]"> AI/LLM tooling</span> —
-          with a consistent focus on shipping things that actually work end to end,
-          not just demos.
+          <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> React</span>,
+          <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> Node.js</span>,
+          <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> Python</span>, and
+          <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> AI/LLM tooling</span> —
+          with a consistent focus on shipping things that actually work end to end, not just demos.
         </p>
 
-        <div className="border-l-2 border-[#e9ecef] pl-3">
-          <p className="text-[12px] text-[#585858] leading-relaxed">
+        <div className="pl-3" style={{ borderLeft: "2px solid var(--color-border)" }}>
+          <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
             What stands out isn't just the code — it's the combination of
-            <span className="font-medium text-[#1a1a1a]"> technical depth</span> and
-            <span className="font-medium text-[#1a1a1a]"> real-world motivation</span>.
-            Every project here started because something was missing or frustrating,
-            and ended with something usable.
+            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> technical depth</span> and
+            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> real-world motivation</span>.
+            Every project here started because something was missing or frustrating, and ended with something usable.
           </p>
         </div>
       </div>
     </div>
 
-    {/* Project list */}
     <div className="mt-4">
       {PROJECTS.map((p, i) => (
         <ProjectRow key={p.title} project={p} isLast={i === PROJECTS.length - 1} />
       ))}
     </div>
 
-    {/* Footer */}
-    <p className="text-[12px] text-[#585858] leading-relaxed mt-4">
-      These projects highlight different aspects of my work — from frontend
-      engineering and system design to AI-powered applications. Feel free to
-      ask about the architecture, challenges, or technical decisions behind any project.
+    <p className="text-[12px] leading-relaxed mt-4" style={{ color: "var(--color-text-secondary)" }}>
+      These projects highlight different aspects of my work — from frontend engineering and system design
+      to AI-powered applications. Feel free to ask about the architecture, challenges, or technical decisions
+      behind any project.
     </p>
 
     <div className="mt-4">
@@ -282,4 +290,3 @@ const ChatProjects = () => (
 export default ChatProjects;
 export { PROJECTS };
 export type { Project };
-

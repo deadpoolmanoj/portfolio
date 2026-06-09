@@ -24,20 +24,32 @@ const ChatLoadingAnimation = () => {
 
   return (
     <div className="flex items-center gap-3 py-2">
-      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#fff0eb] border border-[#ffe0d0]">
+      <div
+        className="flex items-center justify-center w-8 h-8 rounded-full"
+        style={{
+          backgroundColor: "var(--color-bg-accent)",
+          border: "1px solid var(--color-border-accent)",
+        }}
+      >
         <Loader2
           size={16}
-          className="text-[#ffac81] animate-spin"
+          className="animate-spin"
           strokeWidth={2.5}
+          style={{ color: "var(--color-accent)" }}
         />
       </div>
 
       <div className="flex flex-col">
-        <span className="text-[13px] font-medium text-[#1a1a1a]">
+        <span
+          className="text-[13px] font-medium"
+          style={{ color: "var(--color-text-primary)" }}
+        >
           {messages[index]}
         </span>
-
-        <span className="text-[11px] text-[#9b9b9b]">
+        <span
+          className="text-[11px]"
+          style={{ color: "var(--color-text-muted)" }}
+        >
           Please wait a moment
         </span>
       </div>
