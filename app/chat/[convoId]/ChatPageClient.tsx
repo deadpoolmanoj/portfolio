@@ -3,10 +3,24 @@
 import Chats from "@/app/components/Chats";
 import InputBar from "@/app/components/InputBar";
 import { useConversation } from "@/context/ConversationContext";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ChatPageClient({ convoId }: { convoId: string }) {
   const { conversations } = useConversation();
-  const messages = conversations.find(c => c.id === convoId)?.messages ?? [];
+  const router = useRouter();
+
+  const conversation = conversations.find(c => c.id === convoId);
+
+  useEffect(() => {
+    if (!conversation) {
+      router.replace("/");
+    }
+  }, [conversation, router]);
+
+  if (!conversation) return null;
+
+  const messages = conversation.messages;
 
   return (
     <div
@@ -18,7 +32,8 @@ export default function ChatPageClient({ convoId }: { convoId: string }) {
           <Chats messages={messages} convoId={convoId} />
         </div>
       </div>
+
       <InputBar convoId={convoId} />
     </div>
   );
-}
+} 
