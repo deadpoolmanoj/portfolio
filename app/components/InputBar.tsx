@@ -20,7 +20,9 @@ export default function InputBar() {
         //   style={{ backgroundColor: "var(--color-bg-page)" }}
         >
             <div
-                style={{ backgroundColor: "var(--color-bg-page)" }}>
+                className=" rounded-t-3xl"
+            style={{ backgroundColor: "var(--color-bg-page)" }}
+            >
                 <div
                     className="rounded-3xl flex flex-col p-[2px]"
                     style={{
