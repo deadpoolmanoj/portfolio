@@ -4,6 +4,7 @@ import { useConversation } from '@/context/ConversationContext';
 import { useTheme } from '@/context/ThemeContext';
 import { truncateText } from '@/utils/textFormatingHelper';
 import { Brain, CirclePlus, Dock, FolderKanban, Moon, PanelLeft, School, Sun, Wrench, X } from 'lucide-react';
+import { usePathname } from "next/navigation";
 
 type SidebarContentProps = {
     sidebarOpen: boolean;

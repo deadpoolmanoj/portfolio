@@ -80,9 +80,9 @@ export default function ChatSkills() {
       <div className="mt-4 space-y-1">
         <Section title="Frontend">
           <Pill icon={<SiReact color="#61dafb" />} label="React" />
-          <Pill icon={<SiNextdotjs color="#1a1a1a" />} label="Next.js" />
+          <Pill icon={<SiNextdotjs style={{ color: "var(--color-text-primary)" }} />} label="Next.js" />
           <Pill icon={<SiTailwindcss color="#38bdf8" />} label="Tailwind CSS" />
-          <Pill icon={<SiShadcnui color="#1a1a1a" />} label="shadcn/ui" />
+          <Pill icon={<SiShadcnui style={{ color: "var(--color-text-primary)" }} />} label="shadcn/ui" />
           <Pill icon={<SiJamstack color="#ef4444" />} label="TanStack" />
           <Pill icon={<BsFiletypeHtml color="#e34c26" />} label="HTML" />
           <Pill icon={<BsFiletypeCss color="#2965f1" />} label="CSS" />
@@ -106,9 +106,9 @@ export default function ChatSkills() {
 
         <Section title="DevOps & Cloud">
           <Pill icon={<SiDocker color="#2496ed" />} label="Docker" />
-          <Pill icon={<SiVercel color="#1a1a1a" />} label="Vercel" />
+          <Pill icon={<SiVercel style={{ color: "var(--color-text-primary)" }} />} label="Vercel" />
           <Pill icon={<SiNetlify color="#00ad9f" />} label="Netlify" />
-          <Pill icon={<SiGithub color="#1a1a1a" />} label="GitHub" />
+          <Pill icon={<SiGithub style={{ color: "var(--color-text-primary)" }} />} label="GitHub" />
         </Section>
 
         <Section title="Tools">

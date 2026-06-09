@@ -2,9 +2,16 @@
 
 import { useState } from 'react';
 import SidebarContent from './SideBarContent';
+import { usePathname } from "next/navigation";
 
 const SideBar = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+
+  const pathname = usePathname();
+
+  const isBlogPage = pathname.startsWith("/blogs");
+
+  if(isBlogPage) return
 
   return (
     <div

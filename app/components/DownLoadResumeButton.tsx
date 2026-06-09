@@ -1,8 +1,19 @@
 import { Download, MoveUpRight } from 'lucide-react'
 
 const DownLoadResumeButton = () => {
+
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = "/Manoj-Resume.pdf"; // file inside public folder
+    link.download = "Manoj-Naik-Resume.pdf";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   return (
     <button
+      onClick={handleDownload}
       className='group flex items-center justify-between w-full rounded-xl px-4 py-3 transition-all duration-150'
       style={{
         border: "1px solid var(--color-border)",

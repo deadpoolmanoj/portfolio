@@ -22,37 +22,75 @@ const ChatEducation = () => {
         </h1>
 
         <div className="space-y-3">
-          <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
-            My academic journey has been centered around
-            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> technology</span> and
-            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> computer science</span>.
+          <p
+            className="text-[12px] leading-relaxed"
+            style={{ color: "var(--color-text-secondary)" }}
+          >
+            My academic journey has been driven by a strong interest in
+            <span
+              className="font-medium"
+              style={{ color: "var(--color-text-primary)" }}
+            >
+              {" "}technology, mathematics, and problem-solving
+            </span>.
             I completed my
-            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> SSC</span> from
-            <span className="italic"> St. Xavier's High School</span> in 2018,
-            followed by my
-            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> HSC (Science)</span> from
-            <span className="italic"> Rizvi College of Science</span> in 2020.
+            <span
+              className="font-medium"
+              style={{ color: "var(--color-text-primary)" }}
+            >
+              {" "}Secondary School education
+            </span>
+            {" "}at <span className="italic">S.S.E.M.H.S</span>, where I built a
+            solid foundation in science and mathematics.
           </p>
 
-          <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
-            I then earned a
-            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> Bachelor of Science in Information Technology</span>
-            {" "}from the <span className="italic">University of Mumbai</span>,
+          <p
+            className="text-[12px] leading-relaxed"
+            style={{ color: "var(--color-text-secondary)" }}
+          >
+            I then pursued my
+            <span
+              className="font-medium"
+              style={{ color: "var(--color-text-primary)" }}
+            >
+              {" "}Pre-University education (PCMC)
+            </span>
+            {" "}at <span className="italic">Sri Vidyaniketan P U College</span>,
+            focusing on Physics, Chemistry, Mathematics, and Computer Science.
+            This phase strengthened my analytical thinking and sparked my interest
+            in software development.
+          </p>
+
+          <p
+            className="text-[12px] leading-relaxed"
+            style={{ color: "var(--color-text-secondary)" }}
+          >
+            To deepen my technical expertise, I earned a
+            <span
+              className="font-medium"
+              style={{ color: "var(--color-text-primary)" }}
+            >
+              {" "}Bachelor of Science in Information Technology
+            </span>
+            {" "}from <span className="italic">Vidyalankar School of Information Technology</span>,
             graduating with a
-            <span className="font-medium text-green-600"> CGPA of 8.4</span>.
-            Currently, I'm pursuing a
-            <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> Master of Computer Applications (MCA)</span>
-            {" "}at <span className="italic">Sikkim Manipal University</span>.
+            <span className="font-medium text-green-600"> CGPA of 8.4</span> and
+            First Class with Distinction. During this time, I developed a strong
+            foundation in web development, databases, networking, and object-oriented programming.
           </p>
 
-          <div className="pl-3" style={{ borderLeft: "2px solid var(--color-border)" }}>
-            <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
-              What stands out isn't just the degrees—it's the combination of
-              <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> academic learning</span> and
-              <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> hands-on development</span>.
-              Throughout my studies, I've consistently built real-world projects,
-              explored modern technologies, and strengthened my problem-solving
-              skills through practical experience.
+          <div
+            className="pl-3"
+            style={{ borderLeft: "2px solid var(--color-border)" }}
+          >
+            <p
+              className="text-[12px] leading-relaxed"
+              style={{ color: "var(--color-text-secondary)" }}
+            >
+              Beyond academics, I've always focused on applying what I learn
+              through hands-on projects. Building real-world applications alongside
+              my coursework has helped me strengthen my development skills and gain
+              practical experience with modern technologies.
             </p>
           </div>
         </div>
@@ -68,13 +106,13 @@ const ChatEducation = () => {
         <div className="relative mb-7">
           <div className="absolute -left-[28px] top-1 w-[11px] h-[11px] rounded-full bg-orange-100 border-2 border-orange-400" />
           <p className="text-[10px] font-medium uppercase tracking-widest text-orange-500 mb-1">
-            2015 – 2018
+            2015 – 2017
           </p>
           <p className="text-[14px] font-medium mb-0.5" style={{ color: "var(--color-text-primary)" }}>
-            St. Xavier's High School
+            S.S.E.M.H.S
           </p>
           <p className="text-[12px] mb-2" style={{ color: "var(--color-text-secondary)" }}>
-            SSC · 10th Standard · Maharashtra State Board
+            SSC · 10th Standard · Karnataka State Board
           </p>
           <div className="flex flex-wrap gap-1.5">
             <Badge text="Science" />
@@ -87,13 +125,13 @@ const ChatEducation = () => {
         <div className="relative mb-7">
           <div className="absolute -left-[28px] top-1 w-[11px] h-[11px] rounded-full bg-orange-100 border-2 border-orange-400" />
           <p className="text-[10px] font-medium uppercase tracking-widest text-orange-500 mb-1">
-            2018 – 2020
+            2017 – 2019
           </p>
           <p className="text-[14px] font-medium mb-0.5" style={{ color: "var(--color-text-primary)" }}>
-            Rizvi College of Science
+            Sri Vidyaniketan P U College
           </p>
           <p className="text-[12px] mb-2" style={{ color: "var(--color-text-secondary)" }}>
-            HSC · Science Stream · Maharashtra State Board
+            Pre University · PCMC · Karnataka State Board
           </p>
           <div className="flex flex-wrap gap-1.5">
             <Badge text="Physics" />
@@ -107,10 +145,10 @@ const ChatEducation = () => {
         <div className="relative mb-7">
           <div className="absolute -left-[28px] top-1 w-[11px] h-[11px] rounded-full bg-orange-100 border-2 border-orange-400" />
           <p className="text-[10px] font-medium uppercase tracking-widest text-orange-500 mb-1">
-            2020 – 2023
+            2019 – 2022
           </p>
           <p className="text-[14px] font-medium mb-0.5" style={{ color: "var(--color-text-primary)" }}>
-            University of Mumbai
+            Vidyalankar School of Information Technology
           </p>
           <p className="text-[12px] mb-0.5" style={{ color: "var(--color-text-secondary)" }}>
             BSc Information Technology
@@ -127,7 +165,7 @@ const ChatEducation = () => {
         </div>
 
         {/* MCA */}
-        <div className="relative">
+        {/* <div className="relative">
           <div className="absolute -left-[29px] top-[3px] w-[13px] h-[13px] rounded-full border-[2.5px] border-orange-400 ring-[3px] ring-orange-100"
             style={{ backgroundColor: "var(--color-bg-page)" }} />
           <p className="text-[10px] font-medium uppercase tracking-widest text-orange-500 mb-1">
@@ -153,7 +191,7 @@ const ChatEducation = () => {
             <Badge text="Cloud" />
             <Badge text="DSA" />
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Footer */}
