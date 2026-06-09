@@ -39,6 +39,14 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
         sendUserMessage(type);
     }
 
+    const handleSidebarAction = (callback: () => void) => {
+        callback();
+
+        if (isMobile) {
+            onClose?.();
+        }
+    };
+
     return (
         <div
             className="w-full h-[100dvh] flex flex-col"
@@ -76,7 +84,9 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
             {/* New chat */}
             <div className={`px-2 mb-3 ${!sidebarOpen && "flex justify-center"}`}>
                 <button
-                    onClick={() => startNewConversation()}
+                    onClick={() =>
+                        handleSidebarAction(() => startNewConversation())
+                    }
                     className={`flex items-center gap-2 text-[12px] font-medium rounded-lg transition-colors
                         ${sidebarOpen ? "w-full px-3 py-2" : "p-2 justify-center"}`}
                     style={{ color: "var(--color-text-secondary)" }}
@@ -101,7 +111,9 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
                 <li>
                     <button
                         disabled={isResponseGenerating}
-                        onClick={() => typeSelected("projects")}
+                        onClick={() =>
+                            handleSidebarAction(() => typeSelected("projects"))
+                        }
                         className={`w-full flex items-center gap-2.5 text-[12px] font-medium rounded-lg transition-colors
                             ${sidebarOpen ? "px-3 py-2" : "p-2 justify-center"}`}
                         style={{ color: "var(--color-text-secondary)" }}
@@ -120,7 +132,9 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
                 </li>
                 <li>
                     <button
-                        onClick={() => typeSelected("skills")}
+                        onClick={() =>
+                            handleSidebarAction(() => typeSelected("skills"))
+                        }
                         className={`w-full flex items-center gap-2.5 text-[12px] font-medium rounded-lg transition-colors
                             ${sidebarOpen ? "px-3 py-2" : "p-2 justify-center"}`}
                         style={{ color: "var(--color-text-secondary)" }}
@@ -139,7 +153,9 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
                 </li>
                 <li>
                     <button
-                        onClick={() => typeSelected("education")}
+                        onClick={() =>
+                            handleSidebarAction(() => typeSelected("education"))
+                        }
                         className={`w-full flex items-center gap-2.5 text-[12px] font-medium rounded-lg transition-colors
                             ${sidebarOpen ? "px-3 py-2" : "p-2 justify-center"}`}
                         style={{ color: "var(--color-text-secondary)" }}
@@ -158,7 +174,9 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
                 </li>
                 <li>
                     <button
-                        onClick={() => typeSelected("blogs")}
+                        onClick={() =>
+                            handleSidebarAction(() => typeSelected("blogs"))
+                        }
                         className={`w-full flex items-center gap-2.5 text-[12px] font-medium rounded-lg transition-colors
                             ${sidebarOpen ? "px-3 py-2" : "p-2 justify-center"}`}
                         style={{ color: "var(--color-text-secondary)" }}
@@ -190,7 +208,9 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
                         {conversations.map((c) => (
                             <li key={c.id}>
                                 <button
-                                    onClick={() => switchConversation(c.id)}
+                                    onClick={() =>
+                                        handleSidebarAction(() => switchConversation(c.id))
+                                    }
                                     className="w-full text-left px-3 py-2 rounded-lg text-[12px] transition-colors"
                                     style={{
                                         backgroundColor: activeConvoId === c.id ? "var(--color-sidebar-active)" : "transparent",
@@ -220,34 +240,12 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
 
             {!sidebarOpen && <div className="flex-1" />}
 
-            {/* Theme toggle */}
-            {/* <div className={`px-2 mb-2 ${!sidebarOpen && "flex justify-center"}`}>
-                <button
-                    onClick={toggleTheme}
-                    className={`flex items-center gap-2 text-[12px] font-medium rounded-lg transition-colors
-                        ${sidebarOpen ? "w-full px-3 py-2" : "p-2 justify-center"}`}
-                    style={{ color: "var(--color-text-secondary)" }}
-                    onMouseEnter={e => {
-                        (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-sidebar-hover)";
-                        (e.currentTarget as HTMLElement).style.color = "var(--color-text-primary)";
-                    }}
-                    onMouseLeave={e => {
-                        (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                        (e.currentTarget as HTMLElement).style.color = "var(--color-text-secondary)";
-                    }}
-                >
-                    {isDark
-                        ? <Sun size={14} className="shrink-0" style={{ color: "var(--color-text-muted)" }} />
-                        : <Moon size={14} className="shrink-0" style={{ color: "var(--color-text-muted)" }} />
-                    }
-                    {sidebarOpen && (isDark ? "Light mode" : "Dark mode")}
-                </button>
-            </div> */}
-
             {/* AskManoj card */}
             {sidebarOpen && (
                 <div
-                    onClick={() => sendUserMessage("ask manoj")}
+                    onClick={() =>
+                        handleSidebarAction(() => sendUserMessage("ask manoj"))
+                    }
                     className="mx-2 mb-2 p-3 rounded-xl flex items-center gap-2.5 cursor-pointer active:scale-[0.98] transition-all duration-150"
                     style={{
                         border: "1px solid var(--color-border-light)",
