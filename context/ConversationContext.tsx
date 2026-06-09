@@ -205,7 +205,12 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
     }
 
     function startNewConversation() {
-        router.push('/');
+        const newConvo = createConversation("New chat");
+
+        setConversations(prev => [...prev, newConvo]);
+        setActiveConvoId(newConvo.id);
+
+        router.push(`/chat/${newConvo.id}`);
     }
 
     function addMessages(convoId: string, newMsgs: Message[]) {
@@ -375,7 +380,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
     }
 
     async function askClaude(history: { role: string; content: string }[]) {
-        // return;
+        return;
         const res = await fetch("/api/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
