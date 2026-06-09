@@ -62,7 +62,7 @@ export default function HomeIntro({ weather, sendUserMessage }: HomeIntroProps) 
   
 
   return (
-    <div className="w-full pt-12 md:pt-24 flex justify-center items-center px-4 pb-32">
+    <div className="w-full pt-12 md:pt-24 flex justify-center items-center px-4 pb-32 ">
       <div className="flex flex-col items-center w-full max-w-sm">
 
         {/* Context strip — weather + time */}
