@@ -48,7 +48,7 @@ export default function Home() {
 
         {/* ── Chat area ── */}
         {!noChatsYet && (
-          <div className="pb-32 max-w-3xl w-full px-4 md:px-4">
+          <div className="pb-32 max-w-3xl w-full px-4 md:px-4 ">
             <Chats messages={conversations.find(c => c.id === activeConvoId)?.messages ?? []} />
           </div>
         )}
