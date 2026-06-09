@@ -380,7 +380,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
     }
 
     async function askClaude(history: { role: string; content: string }[]) {
-        // return;
+        return;
         const res = await fetch("/api/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
