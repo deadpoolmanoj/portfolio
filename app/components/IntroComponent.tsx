@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Cloud, ChevronRight, RefreshCw, Clock } from "lucide-react";
+import { UserEnvironment } from "@/utils/userMetaData";
 
 const STATUSES = [
   "☕ Brewing coffee & debugging linked lists.",
@@ -24,7 +25,7 @@ interface Weather {
 }
 
 interface HomeIntroProps {
-  weather?: Weather;
+  weather?: UserEnvironment | null;
   sendUserMessage: (text: string) => void;
 }
 
