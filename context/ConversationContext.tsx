@@ -241,6 +241,22 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         let convoId: string;
 
         if (existingConvoId) {
+            const result = classifyUserInput(content);
+
+            if (result.intent !== "unknown" && !result.hasSubIntent) {
+                const currentConvo = conversations.find(c => c.id === existingConvoId);
+                const existingMsg = currentConvo?.messages.find(m => m.type === result.intent);
+
+                if (existingMsg) {
+                    document.getElementById(`message-${existingMsg.id}`)?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                    });
+                    setMessage("");
+                    return;
+                }
+            }
+
             convoId = existingConvoId;
             addMessages(convoId, [
                 { id: crypto.randomUUID(), role: "user", type: "text", content },
@@ -248,13 +264,30 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         } else {
             const newConvo = createConversation(content);
             convoId = newConvo.id;
-            setActiveConvoId(convoId); 
+            setActiveConvoId(convoId);
             setConversations(prev => [...prev, newConvo]);
             router.push(`/chat/${convoId}`);
             await new Promise(r => setTimeout(r, 0));
             addMessages(convoId, [
                 { id: crypto.randomUUID(), role: "user", type: "text", content },
             ]);
+        }
+
+        // Check if same intent component already exists in this conversation
+        const result = classifyUserInput(content);
+
+        if (result.intent !== "unknown" && !result.hasSubIntent) {
+            const currentConvo = conversations.find(c => c.id === convoId);
+            const existingMsg = currentConvo?.messages.find(m => m.type === result.intent);
+
+            if (existingMsg) {
+                document.getElementById(`message-${existingMsg.id}`)?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                });
+                setMessage("");
+                return;
+            }
         }
 
         const loadingId = crypto.randomUUID();
@@ -276,8 +309,6 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         setMessage("");
         stopRequestedRef.current = false;
         setIsResponseGenerating(true);
-
-        const result = classifyUserInput(content);
 
         if (result.intent !== "unknown" && !result.hasSubIntent) {
             await new Promise(resolve => setTimeout(resolve, 2000));
@@ -344,7 +375,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
     }
 
     async function askClaude(history: { role: string; content: string }[]) {
-        return;
+        // return;
         const res = await fetch("/api/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
