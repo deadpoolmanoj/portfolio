@@ -11,7 +11,7 @@ export default function LimitBanner({
 }: LimitBannerProps) {
     return (
         <div
-            className="relative rounded-2xl p-4"
+            className="relative rounded-3xl p-4"
             style={{
                 backgroundColor: "var(--color-bg-card)",
                 border: "1px solid var(--color-border)",
