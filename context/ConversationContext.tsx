@@ -2,6 +2,7 @@
 
 import { classifyUserInput } from "@/utils/intentClassifier";
 import { ReactNode, createContext, useContext, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import ChatProjects from "@/app/components/ChatProjects";
 import ChatSkills from "@/app/components/ChatSkills";
 import ChatEducation from "@/app/components/ChatEducation";
@@ -25,26 +26,23 @@ export type Conversation = {
 
 type ConversationContextType = {
     conversations: Conversation[];
-    activeConvoId: string | null;
-    noChatsYet: boolean;
     message: string;
     setMessage: (msg: string) => void;
-    sendUserMessage: (msg?: string) => Promise<void>;
+    sendUserMessage: (msg?: string, existingConvoId?: string) => Promise<void>;
     switchConversation: (id: string) => void;
     startNewConversation: () => void;
 
     editMessageId: string | null;
     startEditingMessage: (messageId: string, content: string) => void;
-    saveEditedMessage: () => Promise<void>;
+    saveEditedMessage: (convoId: string) => Promise<void>;
 
-    setFeedback: (messageId: string, feedback: "like" | "dislike") => void;
+    setFeedback: (messageId: string, convoId: string, feedback: "like" | "dislike") => void;
 
-    // ── new ──────────────────────────────────────────────────────────────────
     isResponseGenerating: boolean;
     stopResponse: () => void;
-    // ─────────────────────────────────────────────────────────────────────────
 
-    isConversationOver: boolean;
+    isConversationOver: (convoId: string) => boolean;
+    activeConvoId: string | null;
 }
 
 const ConversationContext = createContext<ConversationContextType | null>(null);
@@ -70,42 +68,33 @@ function getComponentForIntent(intent: string): ReactNode {
 export function ConversationProvider({ children }: { children: ReactNode }) {
 
     const CHARACTER_LIMIT = 200;
+    const router = useRouter();
 
     const [conversations, setConversations] = useState<Conversation[]>([]);
-    const [activeConvoId, setActiveConvoId] = useState<string | null>(null);
-    const [noChatsYet, setNoChatsYet] = useState(true);
     const [message, setMessage] = useState("");
     const [editMessageId, setEditMessageId] = useState<string | null>(null);
-
-    const activeConversation = conversations.find(
-        c => c.id === activeConvoId
-    );
-
-    const currentConversationLength =
-        activeConversation?.messages.reduce((total, msg) => {
-            if (typeof msg.content === "string") {
-                return total + msg.content.length;
-            }
-            return total;
-        }, 0) ?? 0;
-
-    const isConversationOver =
-        currentConversationLength >= CHARACTER_LIMIT;
-
-    // ── new ──────────────────────────────────────────────────────────────────
     const [isResponseGenerating, setIsResponseGenerating] = useState(false);
+    const [activeConvoId, setActiveConvoId] = useState<string | null>(null);
     const stopRequestedRef = useRef(false);
-    // ─────────────────────────────────────────────────────────────────────────
+
+    function isConversationOver(convoId: string): boolean {
+        const convo = conversations.find(c => c.id === convoId);
+        if (!convo) return false;
+        const length = convo.messages.reduce((total, msg) => {
+            if (typeof msg.content === "string") return total + msg.content.length;
+            return total;
+        }, 0);
+        return length >= CHARACTER_LIMIT;
+    }
 
     function stopResponse() {
         stopRequestedRef.current = true;
     }
 
-    function setFeedback(messageId: string, feedback: "like" | "dislike") {
-        if (!activeConvoId) return;
+    function setFeedback(messageId: string, convoId: string, feedback: "like" | "dislike") {
         setConversations(prev =>
             prev.map(convo => {
-                if (convo.id !== activeConvoId) return convo;
+                if (convo.id !== convoId) return convo;
                 return {
                     ...convo,
                     messages: convo.messages.map(msg =>
@@ -121,10 +110,10 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         setMessage(content);
     }
 
-    async function saveEditedMessage() {
-        if (!editMessageId || !activeConvoId) return;
+    async function saveEditedMessage(convoId: string) {
+        if (!editMessageId) return;
 
-        const convo = conversations.find(c => c.id === activeConvoId);
+        const convo = conversations.find(c => c.id === convoId);
         if (!convo) return;
 
         const editedIndex = convo.messages.findIndex(m => m.id === editMessageId);
@@ -134,7 +123,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         updatedMessages[editedIndex] = { ...updatedMessages[editedIndex], content: message };
 
         setConversations(prev =>
-            prev.map(c => c.id === activeConvoId ? { ...c, messages: updatedMessages } : c)
+            prev.map(c => c.id === convoId ? { ...c, messages: updatedMessages } : c)
         );
 
         const editedContent = message;
@@ -145,7 +134,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
 
         setConversations(prev =>
             prev.map(c => {
-                if (c.id !== activeConvoId) return c;
+                if (c.id !== convoId) return c;
                 return {
                     ...c,
                     messages: [
@@ -158,26 +147,21 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
 
         const result = classifyUserInput(editedContent);
 
-        // ── flag on ───────────────────────────────────────────────────────────
         stopRequestedRef.current = false;
         setIsResponseGenerating(true);
-        // ─────────────────────────────────────────────────────────────────────
 
         if (result.intent !== "unknown" && !result.hasSubIntent) {
             await new Promise(resolve => setTimeout(resolve, 2000));
 
             if (stopRequestedRef.current) {
-                replaceLoading(activeConvoId, loadingId, {
-                    id: crypto.randomUUID(),
-                    role: "assistant",
-                    type: "text",
-                    content: "Response interrupted.",
+                replaceLoading(convoId, loadingId, {
+                    id: crypto.randomUUID(), role: "assistant", type: "text", content: "Response interrupted.",
                 });
                 setIsResponseGenerating(false);
                 return;
             }
 
-            replaceLoading(activeConvoId, loadingId, {
+            replaceLoading(convoId, loadingId, {
                 id: crypto.randomUUID(),
                 role: "assistant",
                 type: result.intent as "projects" | "skills" | "education",
@@ -188,51 +172,40 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         }
 
         try {
-            const history = buildHistory(activeConvoId, editedContent);
+            const history = buildHistory(convoId, editedContent);
             const [data] = await Promise.all([
                 askClaude(history),
                 new Promise(resolve => setTimeout(resolve, 2000)),
             ]);
 
             if (stopRequestedRef.current) {
-                replaceLoading(activeConvoId, loadingId, {
-                    id: crypto.randomUUID(),
-                    role: "assistant",
-                    type: "text",
-                    content: "Response interrupted.",
+                replaceLoading(convoId, loadingId, {
+                    id: crypto.randomUUID(), role: "assistant", type: "text", content: "Response interrupted.",
                 });
                 setIsResponseGenerating(false);
                 return;
             }
 
-            replaceLoading(activeConvoId, loadingId, {
-                id: crypto.randomUUID(),
-                role: "assistant",
-                type: "text",
+            replaceLoading(convoId, loadingId, {
+                id: crypto.randomUUID(), role: "assistant", type: "text",
                 content: data?.response ?? "Sorry, I couldn't find an answer.",
             });
         } catch {
-            replaceLoading(activeConvoId, loadingId, {
-                id: crypto.randomUUID(),
-                role: "assistant",
-                type: "text",
-                content: "Sorry, something went wrong.",
+            replaceLoading(convoId, loadingId, {
+                id: crypto.randomUUID(), role: "assistant", type: "text", content: "Sorry, something went wrong.",
             });
         } finally {
-            // ── flag off ──────────────────────────────────────────────────────
             setIsResponseGenerating(false);
-            // ─────────────────────────────────────────────────────────────────
         }
     }
 
     function switchConversation(id: string) {
         setActiveConvoId(id);
-        setNoChatsYet(false);
+        router.push(`/chat/${id}`);
     }
 
     function startNewConversation() {
-        setActiveConvoId(null);
-        setNoChatsYet(true);
+        router.push('/');
     }
 
     function addMessages(convoId: string, newMsgs: Message[]) {
@@ -260,66 +233,64 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    async function sendUserMessage(msg?: string) {
+    async function sendUserMessage(msg?: string, existingConvoId?: string) {
         const content = msg ?? message;
         if (!content.trim()) return;
-
-        // ── block while generating ────────────────────────────────────────────
         if (isResponseGenerating) return;
-        // ─────────────────────────────────────────────────────────────────────
 
-        let convoId = activeConvoId;
+        let convoId: string;
 
-        if (!convoId) {
+        if (existingConvoId) {
+            convoId = existingConvoId;
+            addMessages(convoId, [
+                { id: crypto.randomUUID(), role: "user", type: "text", content },
+            ]);
+        } else {
             const newConvo = createConversation(content);
             convoId = newConvo.id;
-            setActiveConvoId(convoId);
+            setActiveConvoId(convoId); 
             setConversations(prev => [...prev, newConvo]);
-        }
-
-        const result = classifyUserInput(content);
-
-        if (result.intent !== "unknown" && !result.hasSubIntent) {
-            const currentConversation = conversations.find(c => c.id === convoId);
-            const existingMessage = currentConversation?.messages.find(m => m.type === result.intent);
-
-            if (existingMessage) {
-                scrollToMessage(existingMessage.id);
-                return;
-            }
+            router.push(`/chat/${convoId}`);
+            await new Promise(r => setTimeout(r, 0));
+            addMessages(convoId, [
+                { id: crypto.randomUUID(), role: "user", type: "text", content },
+            ]);
         }
 
         const loadingId = crypto.randomUUID();
-        const capturedConvoId = convoId;
 
-        addMessages(capturedConvoId, [
-            { id: crypto.randomUUID(), role: "user", type: "text", content },
-            { id: loadingId, role: "assistant", type: "loading", content: "Thinking..." },
-        ]);
+        setConversations(prev =>
+            prev.map(c =>
+                c.id === convoId
+                    ? {
+                        ...c,
+                        messages: [
+                            ...c.messages,
+                            { id: loadingId, role: "assistant", type: "loading", content: "Thinking..." },
+                        ]
+                    }
+                    : c
+            )
+        );
 
         setMessage("");
-        setNoChatsYet(false);
-
-        // ── flag on ───────────────────────────────────────────────────────────
         stopRequestedRef.current = false;
         setIsResponseGenerating(true);
-        // ─────────────────────────────────────────────────────────────────────
+
+        const result = classifyUserInput(content);
 
         if (result.intent !== "unknown" && !result.hasSubIntent) {
             await new Promise(resolve => setTimeout(resolve, 2000));
 
             if (stopRequestedRef.current) {
-                replaceLoading(capturedConvoId, loadingId, {
-                    id: crypto.randomUUID(),
-                    role: "assistant",
-                    type: "text",
-                    content: "Response interrupted.",
+                replaceLoading(convoId, loadingId, {
+                    id: crypto.randomUUID(), role: "assistant", type: "text", content: "Response interrupted.",
                 });
                 setIsResponseGenerating(false);
                 return;
             }
 
-            replaceLoading(capturedConvoId, loadingId, {
+            replaceLoading(convoId, loadingId, {
                 id: crypto.randomUUID(),
                 role: "assistant",
                 type: result.intent as "projects" | "skills" | "education",
@@ -330,41 +301,35 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
         }
 
         try {
-            const history = buildHistory(capturedConvoId, content);
+            const history = existingConvoId
+                ? buildHistory(existingConvoId, content)
+                : [{ role: "user", content }];
+
             const [data] = await Promise.all([
                 askClaude(history),
                 new Promise(resolve => setTimeout(resolve, 2000)),
             ]);
 
             if (stopRequestedRef.current) {
-                replaceLoading(capturedConvoId, loadingId, {
-                    id: crypto.randomUUID(),
-                    role: "assistant",
-                    type: "text",
-                    content: "Response interrupted.",
+                replaceLoading(convoId, loadingId, {
+                    id: crypto.randomUUID(), role: "assistant", type: "text", content: "Response interrupted.",
                 });
                 setIsResponseGenerating(false);
                 return;
             }
 
-            replaceLoading(capturedConvoId, loadingId, {
-                id: crypto.randomUUID(),
-                role: "assistant",
-                type: "text",
+            replaceLoading(convoId, loadingId, {
+                id: crypto.randomUUID(), role: "assistant", type: "text",
                 content: data?.response ?? "Sorry, I couldn't find an answer.",
             });
         } catch (error) {
             console.error(error);
-            replaceLoading(capturedConvoId, loadingId, {
-                id: crypto.randomUUID(),
-                role: "assistant",
-                type: "text",
+            replaceLoading(convoId, loadingId, {
+                id: crypto.randomUUID(), role: "assistant", type: "text",
                 content: "Sorry, something went wrong. Please try again.",
             });
         } finally {
-            // ── flag off ──────────────────────────────────────────────────────
             setIsResponseGenerating(false);
-            // ─────────────────────────────────────────────────────────────────
         }
     }
 
@@ -391,27 +356,19 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
     return (
         <ConversationContext.Provider value={{
             conversations,
-            activeConvoId,
-            noChatsYet,
             message,
             setMessage,
             sendUserMessage,
-
             editMessageId,
             startEditingMessage,
             saveEditedMessage,
-
             setFeedback,
-
-            // ── new ───────────────────────────────────────────────────────────
             isResponseGenerating,
             stopResponse,
-            // ─────────────────────────────────────────────────────────────────
-
             switchConversation,
             startNewConversation,
-
             isConversationOver,
+            activeConvoId,
         }}>
             {children}
         </ConversationContext.Provider>

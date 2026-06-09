@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { Cloud, ChevronRight, RefreshCw, Clock } from "lucide-react";
 import { UserEnvironment } from "@/utils/userMetaData";
+import InputBar from "./InputBar";
+import { useConversation } from "@/context/ConversationContext";
 
 const STATUSES = [
   "☕ Brewing coffee & debugging linked lists.",
@@ -26,13 +28,15 @@ interface Weather {
 
 interface HomeIntroProps {
   weather?: UserEnvironment | null;
-  sendUserMessage: (text: string) => void;
+  // sendUserMessage: (text: string) => void;
 }
 
-export default function HomeIntro({ weather, sendUserMessage }: HomeIntroProps) {
+export default function HomeIntro({ weather }: HomeIntroProps) {
   const [statusIndex, setStatusIndex] = useState(0);
   const [statusVisible, setStatusVisible] = useState(true);
   const [currentTime, setCurrentTime] = useState("");
+
+  const { sendUserMessage } = useConversation()
 
   useEffect(() => {
     const updateTime = () => {
@@ -58,8 +62,8 @@ export default function HomeIntro({ weather, sendUserMessage }: HomeIntroProps) 
     }, 150);
   };
 
-  console.log('weather',weather);
-  
+  console.log('weather', weather);
+
 
   return (
     <div className="w-full pt-12 md:pt-24 flex justify-center items-center px-4 pb-32 ">
@@ -180,7 +184,7 @@ export default function HomeIntro({ weather, sendUserMessage }: HomeIntroProps) 
             </button>
           ))}
         </div>
-
+        <InputBar convoId="" />
       </div>
     </div>
   );

@@ -5,19 +5,21 @@ import { useConversation } from "@/context/ConversationContext";
 
 type Props = {
     messageId: string;
+    convoId: string;
     feedback?: "like" | "dislike" | null;
 };
 
 const ResponseFooter = ({
     messageId,
     feedback,
+    convoId
 }: Props) => {
     const { setFeedback } = useConversation();
 
     return (
         <div className="flex items-center gap-1 mt-3">
             <button
-                onClick={() => setFeedback(messageId, "like")}
+                onClick={() => setFeedback(messageId, convoId, "like")}
                 className="
       h-7 w-7
       flex items-center justify-center
@@ -39,7 +41,7 @@ const ResponseFooter = ({
             </button>
 
             <button
-                onClick={() => setFeedback(messageId, "dislike")}
+                onClick={() => setFeedback(messageId, convoId, "dislike")}
                 className="
       h-7 w-7
       flex items-center justify-center

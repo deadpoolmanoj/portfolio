@@ -37,7 +37,7 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
             return;
         }
 
-        sendUserMessage(type);
+        sendUserMessage(type, activeConvoId ?? undefined); // ← pass activeConvoId here
     }
 
     const handleSidebarAction = (callback: () => void) => {
@@ -245,7 +245,7 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
             {sidebarOpen && (
                 <div
                     onClick={() =>
-                        handleSidebarAction(() => sendUserMessage("ask manoj"))
+                        handleSidebarAction(() => sendUserMessage("ask manoj", activeConvoId ?? undefined))
                     }
                     className="mx-2 mb-2 p-3 rounded-xl flex items-center gap-2.5 cursor-pointer active:scale-[0.98] transition-all duration-150"
                     style={{
@@ -298,7 +298,7 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
                             Manoj Naik
                         </span>
                         <span className="text-[11px]" style={{ color: "var(--color-text-muted)" }}>
-                            Open to work · Bengaluru
+                            Open to work
                         </span>
                     </div>
                 )}

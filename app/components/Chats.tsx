@@ -13,26 +13,19 @@ import ChatBlogs from './ChatBlogs';
 import AskManoj from './AskManoj';
 import ChatResume from './ChatResume';
 
-const Chats = ({ messages }: { messages: Message[] }) => {
+const Chats = ({ messages, convoId }: { messages: Message[]; convoId: string }) => {
     const lastScrolledUserMessage = useRef<string | null>(null);
-
     const bottomRef = useRef<HTMLDivElement>(null);
-
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages]);
 
     useEffect(() => {
-        const latestUserMessage = [...messages]
-            .reverse()
-            .find(msg => msg.role === "user");
-
+        const latestUserMessage = [...messages].reverse().find(msg => msg.role === "user");
         if (!latestUserMessage) return;
         if (lastScrolledUserMessage.current === latestUserMessage.id) return;
-
         lastScrolledUserMessage.current = latestUserMessage.id;
-
         document
             .getElementById(`message-${latestUserMessage.id}`)
             ?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -49,47 +42,47 @@ const Chats = ({ messages }: { messages: Message[] }) => {
                     {(() => {
                         switch (msg.type) {
                             case "text":
-                                return <TextMsg message={msg} />;
+                                return <TextMsg message={msg} convoId={convoId} />;
                             case "projects":
                                 return (
                                     <div className="w-full">
                                         <ChatProjects />
-                                        <ResponseFooter messageId={msg.id} feedback={msg.feedback} />
+                                        <ResponseFooter messageId={msg.id} convoId={convoId} feedback={msg.feedback} />
                                     </div>
                                 );
                             case "skills":
                                 return (
                                     <div className="w-full">
                                         <ChatSkills />
-                                        <ResponseFooter messageId={msg.id} feedback={msg.feedback} />
+                                        <ResponseFooter messageId={msg.id} convoId={convoId} feedback={msg.feedback} />
                                     </div>
                                 );
                             case "education":
                                 return (
                                     <div className="w-full">
                                         <ChatEducation />
-                                        <ResponseFooter messageId={msg.id} feedback={msg.feedback} />
+                                        <ResponseFooter messageId={msg.id} convoId={convoId} feedback={msg.feedback} />
                                     </div>
                                 );
                             case "blogs":
                                 return (
                                     <div className='w-full'>
                                         <ChatBlogs />
-                                        <ResponseFooter messageId={msg.id} feedback={msg.feedback} />
+                                        <ResponseFooter messageId={msg.id} convoId={convoId} feedback={msg.feedback} />
                                     </div>
                                 );
                             case "askManoj":
                                 return (
                                     <div className='w-full'>
                                         <AskManoj />
-                                        <ResponseFooter messageId={msg.id} feedback={msg.feedback} />
+                                        <ResponseFooter messageId={msg.id} convoId={convoId} feedback={msg.feedback} />
                                     </div>
                                 );
                             case "resume":
                                 return (
                                     <div className='w-full'>
                                         <ChatResume />
-                                        <ResponseFooter messageId={msg.id} feedback={msg.feedback} />
+                                        <ResponseFooter messageId={msg.id} convoId={convoId} feedback={msg.feedback} />
                                     </div>
                                 );
                             case "loading":
@@ -100,12 +93,12 @@ const Chats = ({ messages }: { messages: Message[] }) => {
                     })()}
                 </div>
             ))}
-            <div ref={bottomRef}/>
+            <div ref={bottomRef} />
         </div>
     );
 };
 
-const TextMsg = ({ message }: { message: Message }) => {
+const TextMsg = ({ message, convoId }: { message: Message; convoId: string }) => {
     const { startEditingMessage } = useConversation();
 
     return (
@@ -115,74 +108,35 @@ const TextMsg = ({ message }: { message: Message }) => {
                     <ReactMarkdown
                         components={{
                             h1: ({ children }) => (
-                                <h1
-                                    className="text-[16px] font-semibold mb-2"
-                                    style={{ color: "var(--color-text-primary)" }}
-                                >
-                                    {children}
-                                </h1>
+                                <h1 className="text-[16px] font-semibold mb-2" style={{ color: "var(--color-text-primary)" }}>{children}</h1>
                             ),
                             h2: ({ children }) => (
-                                <h2
-                                    className="text-[15px] font-medium mb-2 mt-4"
-                                    style={{ color: "var(--color-text-primary)" }}
-                                >
-                                    {children}
-                                </h2>
+                                <h2 className="text-[15px] font-medium mb-2 mt-4" style={{ color: "var(--color-text-primary)" }}>{children}</h2>
                             ),
                             p: ({ children }) => (
-                                <p
-                                    className="text-[12px] leading-relaxed mb-3"
-                                    style={{ color: "var(--color-text-secondary)" }}
-                                >
-                                    {children}
-                                </p>
+                                <p className="text-[12px] leading-relaxed mb-3" style={{ color: "var(--color-text-secondary)" }}>{children}</p>
                             ),
                             strong: ({ children }) => (
-                                <span className="font-medium" style={{ color: "var(--color-text-primary)" }}>
-                                    {children}
-                                </span>
+                                <span className="font-medium" style={{ color: "var(--color-text-primary)" }}>{children}</span>
                             ),
-                            em: ({ children }) => (
-                                <span className="italic">{children}</span>
-                            ),
+                            em: ({ children }) => <span className="italic">{children}</span>,
                             ul: ({ children }) => (
-                                <ul
-                                    className="list-disc pl-5 space-y-1 mb-3 text-[12px]"
-                                    style={{ color: "var(--color-text-secondary)" }}
-                                >
-                                    {children}
-                                </ul>
+                                <ul className="list-disc pl-5 space-y-1 mb-3 text-[12px]" style={{ color: "var(--color-text-secondary)" }}>{children}</ul>
                             ),
                             ol: ({ children }) => (
-                                <ol
-                                    className="list-decimal pl-5 space-y-1 mb-3 text-[12px]"
-                                    style={{ color: "var(--color-text-secondary)" }}
-                                >
-                                    {children}
-                                </ol>
+                                <ol className="list-decimal pl-5 space-y-1 mb-3 text-[12px]" style={{ color: "var(--color-text-secondary)" }}>{children}</ol>
                             ),
-                            li: ({ children }) => (
-                                <li className="leading-relaxed">{children}</li>
-                            ),
+                            li: ({ children }) => <li className="leading-relaxed">{children}</li>,
                             blockquote: ({ children }) => (
-                                <div
-                                    className="pl-3 my-3"
-                                    style={{ borderLeft: "2px solid var(--color-border)" }}
-                                >
-                                    <p
-                                        className="text-[12px] leading-relaxed"
-                                        style={{ color: "var(--color-text-secondary)" }}
-                                    >
-                                        {children}
-                                    </p>
+                                <div className="pl-3 my-3" style={{ borderLeft: "2px solid var(--color-border)" }}>
+                                    <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>{children}</p>
                                 </div>
                             ),
                         }}
                     >
                         {message.content as string}
                     </ReactMarkdown>
-                    <ResponseFooter messageId={message.id} feedback={message.feedback} />
+                    <ResponseFooter messageId={message.id} convoId={convoId} feedback={message.feedback} />
                 </div>
             ) : (
                 <div className='w-full flex items-end flex-col group mt-6'>
@@ -201,30 +155,17 @@ const TextMsg = ({ message }: { message: Message }) => {
                         <button
                             className="flex items-center justify-center h-7 w-7 rounded-full transition-colors"
                             style={{ color: "var(--color-text-muted)" }}
-                            onMouseEnter={e => {
-                                (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)";
-                                (e.currentTarget as HTMLElement).style.color = "var(--color-text-primary)";
-                            }}
-                            onMouseLeave={e => {
-                                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                                (e.currentTarget as HTMLElement).style.color = "var(--color-text-muted)";
-                            }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)"; (e.currentTarget as HTMLElement).style.color = "var(--color-text-primary)"; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; (e.currentTarget as HTMLElement).style.color = "var(--color-text-muted)"; }}
                             aria-label="Copy message"
                         >
                             <Copy size={12} />
                         </button>
-
                         <button
                             className="flex items-center justify-center h-7 w-7 rounded-full transition-colors"
                             style={{ color: "var(--color-text-muted)" }}
-                            onMouseEnter={e => {
-                                (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)";
-                                (e.currentTarget as HTMLElement).style.color = "var(--color-text-primary)";
-                            }}
-                            onMouseLeave={e => {
-                                (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
-                                (e.currentTarget as HTMLElement).style.color = "var(--color-text-muted)";
-                            }}
+                            onMouseEnter={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)"; (e.currentTarget as HTMLElement).style.color = "var(--color-text-primary)"; }}
+                            onMouseLeave={e => { (e.currentTarget as HTMLElement).style.backgroundColor = "transparent"; (e.currentTarget as HTMLElement).style.color = "var(--color-text-muted)"; }}
                             aria-label="Edit message"
                             onClick={() => startEditingMessage(message.id, message.content as string)}
                         >
