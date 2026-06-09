@@ -43,6 +43,8 @@ type ConversationContextType = {
     isResponseGenerating: boolean;
     stopResponse: () => void;
     // ─────────────────────────────────────────────────────────────────────────
+
+    isConversationOver: boolean;
 }
 
 const ConversationContext = createContext<ConversationContextType | null>(null);
@@ -66,11 +68,29 @@ function getComponentForIntent(intent: string): ReactNode {
 }
 
 export function ConversationProvider({ children }: { children: ReactNode }) {
+
+    const CHARACTER_LIMIT = 200;
+
     const [conversations, setConversations] = useState<Conversation[]>([]);
     const [activeConvoId, setActiveConvoId] = useState<string | null>(null);
     const [noChatsYet, setNoChatsYet] = useState(true);
     const [message, setMessage] = useState("");
     const [editMessageId, setEditMessageId] = useState<string | null>(null);
+
+    const activeConversation = conversations.find(
+        c => c.id === activeConvoId
+    );
+
+    const currentConversationLength =
+        activeConversation?.messages.reduce((total, msg) => {
+            if (typeof msg.content === "string") {
+                return total + msg.content.length;
+            }
+            return total;
+        }, 0) ?? 0;
+
+    const isConversationOver =
+        currentConversationLength >= CHARACTER_LIMIT;
 
     // ── new ──────────────────────────────────────────────────────────────────
     const [isResponseGenerating, setIsResponseGenerating] = useState(false);
@@ -359,7 +379,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
     }
 
     async function askClaude(history: { role: string; content: string }[]) {
-        return;
+        // return;
         const res = await fetch("/api/chat", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -390,6 +410,8 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
 
             switchConversation,
             startNewConversation,
+
+            isConversationOver,
         }}>
             {children}
         </ConversationContext.Provider>

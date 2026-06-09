@@ -104,19 +104,6 @@ const INTENT_KEYWORDS: { intent: IntentType; keywords: string[] }[] = [
     ],
   },
   {
-    intent: "askManoj",
-    keywords: [
-      "ask manoj",
-      "manoj",
-      "ask you",
-      "tell me about you",
-      "who are you",
-      "yourself",
-      "about you",
-      "what can you do",
-    ],
-  },
-  {
     intent: "resume",
     keywords: [
       "resume",

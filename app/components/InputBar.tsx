@@ -1,9 +1,14 @@
 "use client";
 
-import { ArrowUp, Square } from "lucide-react";
+import { ArrowUp, Square, X } from "lucide-react";
 import { useConversation } from "@/context/ConversationContext";
+import { useEffect, useState } from "react";
+import LimitBanner from "./LimitBanner";
 
 export default function InputBar() {
+
+
+
     const {
         message,
         setMessage,
@@ -12,16 +17,41 @@ export default function InputBar() {
         saveEditedMessage,
         isResponseGenerating,
         stopResponse,
+        startNewConversation,
+        isConversationOver,
     } = useConversation();
+
+    const [dismissedBanner, setDismissedBanner] = useState(false);
+
+    useEffect(() => {
+        if (!isConversationOver) {
+            setDismissedBanner(false);
+        }
+    }, [isConversationOver]);
+
+    const shouldShowLimitBanner =
+        isConversationOver && !dismissedBanner;
 
     return (
         <div
             className="absolute bottom-0 max-w-3xl w-full px-2 md:px-2 gap-0 z-30 rounded-t-full"
         //   style={{ backgroundColor: "var(--color-bg-page)" }}
         >
+            {shouldShowLimitBanner && (
+                <div className="absolute bottom-full left-2 right-2 mb-3 z-40">
+                    <LimitBanner
+                        onDismiss={() => setDismissedBanner(true)}
+                        onNewConversation={() => {
+                            setDismissedBanner(false);
+                            startNewConversation();
+                        }}
+                    />
+                </div>
+            )}
+
             <div
                 className=" rounded-t-3xl"
-            style={{ backgroundColor: "var(--color-bg-page)" }}
+                style={{ backgroundColor: "var(--color-bg-page)" }}
             >
                 <div
                     className="rounded-3xl flex flex-col p-[2px]"
@@ -32,6 +62,7 @@ export default function InputBar() {
                     }}
                 >
                     <textarea
+                        disabled={isConversationOver}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         onKeyDown={(e) => {
@@ -48,9 +79,9 @@ export default function InputBar() {
                         placeholder="Ask anything about Manoj..."
                         rows={1}
                         className="rounded-t-3xl px-5 pt-4 pb-2 bg-transparent
-             outline-none ring-0 border-0 focus:border-0
-             resize-none focus:outline-none focus:ring-0
-             min-h-[44px] max-h-[120px] leading-relaxed text-[13px]"
+                            outline-none ring-0 border-0 focus:border-0
+                            resize-none focus:outline-none focus:ring-0
+                            min-h-[44px] max-h-[120px] leading-relaxed text-[13px]"
                         style={{ color: "var(--color-text-primary)" }}
                     />
 
