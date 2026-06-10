@@ -26,12 +26,17 @@ function getWeatherIcon(condition?: string) {
 
 const TopNavBar = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
-    const [weather, setWeather] = useState<UserEnvironment | null>(fallbackWeather);
+    const [weather, setWeather] = useState<UserEnvironment | null>(null);
+    // const { sendUserMessage } = useConversation();
 
     useEffect(() => {
         async function loadWeather() {
-            const data = await getUserEnvironment();
-            setWeather(data);
+            try {
+                const data = await getUserEnvironment();
+                setWeather(data ?? fallbackWeather);
+            } catch {
+                setWeather(fallbackWeather);
+            }
         }
         loadWeather();
     }, []);
@@ -59,14 +64,16 @@ const TopNavBar = () => {
                 </button>
 
                 {/* Center: location + weather */}
-                <div
-                    className='flex items-center gap-1.5 text-[12px]'
-                    style={{ color: "var(--color-text-secondary)" }}
-                >
-                    <span style={{ color: "var(--color-border)" }}>·</span>
-                    <span>{weather?.city} {weather?.temperature}°</span>
-                    {getWeatherIcon(condition)}
-                </div>
+                {weather && (
+                    <div
+                        className='flex items-center gap-1.5 text-[12px]'
+                        style={{ color: "var(--color-text-secondary)" }}
+                    >
+                        <span style={{ color: "var(--color-border)" }}>·</span>
+                        <span>{weather.city} {weather.temperature}°</span>
+                        {getWeatherIcon(condition)}
+                    </div>
+                )}
 
                 {/* <div className='w-8' /> */}
                 <ThemeToggle forMobile={true} />
