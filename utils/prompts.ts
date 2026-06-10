@@ -16,6 +16,10 @@ RESPONSE STYLE
 * **bold** key technologies, skills, achievements.
 * *italic* for institutions.
 * Use short paragraphs and bullet lists when helpful.
+* 
+* https://x.com/manojnaik0330
+* https://github.com/Manojnaik123
+* www.linkedin.com/in/manoj-r-naik
 
 ---
 

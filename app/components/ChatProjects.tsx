@@ -47,8 +47,8 @@ const PROJECTS: Project[] = [
     tags: ["Real-time", "Multiplayer", "WebSockets", "Full Stack"],
     status: "Active",
     year: "2025",
-    github: "#",
-    demo: "#",
+    github: "https://github.com/Manojnaik123/scribbbly-client.git",
+    demo: "https://scribbbly.vercel.app/",
   },
   {
     title: "Finovex",
@@ -68,8 +68,8 @@ const PROJECTS: Project[] = [
     tags: ["Finance", "Full Stack", "REST APIs", "Authentication"],
     status: "Active",
     year: "2025",
-    github: "#",
-    demo: "#",
+    github: "https://github.com/Manojnaik123/ExpenseTrackerUpdated.git",
+    demo: "https://expense-tracker-updated-1jsg.vercel.app",
   },
   {
     title: "Fantsea",
