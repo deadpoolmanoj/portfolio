@@ -20,6 +20,8 @@ RESPONSE STYLE
 * https://x.com/manojnaik0330
 * https://github.com/Manojnaik123
 * www.linkedin.com/in/manoj-r-naik
+* 
+* when asked about the socials like linked twitter (X) github return these linked inside the anchor tage making it bold 
 
 ---
 
