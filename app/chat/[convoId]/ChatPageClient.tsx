@@ -12,7 +12,7 @@ export default function ChatPageClient({ convoId }: { convoId: string }) {
 
   const conversation = conversations.find(c => c.id === convoId);
 
-  const noConversation = conversation?.messages.length > 0 ? false : true;
+  // const noConversation = conversation?.messages.length > 0 ? false : true;
   
   useEffect(() => {
     if (!conversation) {
@@ -35,7 +35,7 @@ export default function ChatPageClient({ convoId }: { convoId: string }) {
         </div>
       </div>
 
-      <InputBar convoId={convoId} isAtCenter={noConversation} />
+      <InputBar convoId={convoId} />
     </div>
   );
 } 
