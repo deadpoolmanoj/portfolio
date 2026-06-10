@@ -5,6 +5,9 @@ import { BookOpen, ExternalLink, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BLOGS } from "@/utils/blogs";
 import ResponseFooter from "./ResponseFooter";
+import { useConversation } from "@/context/ConversationContext";
+
+const animatedMessages = new Set<string>();
 
 export const HIDDEN: React.CSSProperties = {
   overflow: "hidden",
@@ -198,7 +201,7 @@ async function runSequence(
 
   for (const p of paragraphContents) {
     const el = document.getElementById(p.id);
-    await typewriterHTML(el, p.html, 12);
+    await typewriterHTML(el, p.html, 1);
     await new Promise((r) => setTimeout(r, 80));
   }
 
@@ -230,12 +233,32 @@ const ChatBlogs = ({ messageId, convoId, feedback, onAnimationComplete }: ChatBl
   const footerNoteRef = useRef<HTMLDivElement>(null);
   const responseFooterRef = useRef<HTMLDivElement>(null);
 
+  const { setIsAiResponding } = useConversation()
+
   useEffect(() => {
     if (!document.getElementById("blogs-blink-style")) {
       const style = document.createElement("style");
       style.id = "blogs-blink-style";
       style.textContent = "@keyframes blogs-blink { 50% { opacity: 0; } }";
       document.head.appendChild(style);
+    }
+
+    if (animatedMessages.has(messageId)) {
+      setTimeout(() => {
+        [headerRef, typeSectionRef, featuredRef, gridRef, footerNoteRef, responseFooterRef].forEach((ref) => {
+          if (ref.current) {
+            ref.current.style.maxHeight = "none";
+            ref.current.style.overflow = "visible";
+            ref.current.style.opacity = "1";
+            ref.current.style.transform = "none";
+          }
+        });
+        paragraphContents.forEach((p) => {
+          const el = document.getElementById(p.id);
+          if (el) el.innerHTML = p.html;
+        });
+      }, 0);
+      return;
     }
 
     [headerRef, typeSectionRef, featuredRef, gridRef, footerNoteRef, responseFooterRef].forEach((ref) => {
@@ -246,8 +269,8 @@ const ChatBlogs = ({ messageId, convoId, feedback, onAnimationComplete }: ChatBl
       }
     });
 
-    const timer = setTimeout(() => {
-      runSequence(
+    const timer = setTimeout(async () => {
+      await runSequence(
         {
           header: headerRef,
           typeSection: typeSectionRef,
@@ -258,6 +281,8 @@ const ChatBlogs = ({ messageId, convoId, feedback, onAnimationComplete }: ChatBl
         },
         onAnimationComplete,
       );
+      animatedMessages.add(messageId);
+      setIsAiResponding(false);
     }, 150);
 
     return () => clearTimeout(timer);

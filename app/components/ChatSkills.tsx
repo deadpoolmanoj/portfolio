@@ -1,152 +1,3 @@
-// "use client";
-
-// import {
-//   SiReact, SiNextdotjs, SiTailwindcss, SiShadcnui, SiJamstack,
-//   SiJavascript, SiTypescript, SiPython,
-//   SiNodedotjs, SiExpress, SiPostgresql, SiMongodb, SiRedis, SiSupabase,
-//   SiDocker, SiVercel, SiNetlify, SiGithub,
-//   SiPostman, SiSwagger,
-// } from "react-icons/si";
-// import { TbApi, TbRepeat, TbLayersIntersect, TbBinaryTree } from "react-icons/tb";
-// import { BsFiletypeHtml, BsFiletypeCss } from "react-icons/bs";
-// import Badge from "./Badge";
-// import DownLoadResumeButton from "./DownLoadResumeButton";
-// import ResponseFooter from "./ResponseFooter";
-
-// const Pill = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
-//   <span
-//     className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[12px] font-medium cursor-default select-none"
-//     style={{
-//       border: "1px solid var(--color-badge-border)",
-//       backgroundColor: "var(--color-bg-card)",
-//       color: "var(--color-text-primary)",
-//     }}
-//   >
-//     <span className="text-[14px] leading-none">{icon}</span>
-//     {label}
-//   </span>
-// );
-
-// const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
-//   <div className="mb-5">
-//     <p
-//       className="text-[10px] font-medium uppercase tracking-widest mb-2"
-//       style={{ color: "var(--color-text-muted)" }}
-//     >
-//       {title}
-//     </p>
-//     <div className="flex flex-wrap gap-1.5">{children}</div>
-//   </div>
-// );
-
-// interface ChatSkillsProps {
-//   messageId: string;
-//   convoId: string;
-//   feedback?: string;
-// }
-
-// export default function ChatSkills({ messageId, convoId, feedback }: ChatSkillsProps) {
-//   return (
-//     <div className="w-full">
-
-//       {/* Header */}
-//       <div className="mb-4">
-//         <div className="flex items-center gap-2 mb-4">
-//           <Badge text="Skills" />
-//           <span className="text-[11px]" style={{ color: "var(--color-text-muted)" }}>
-//             26+ technologies
-//           </span>
-//         </div>
-
-//         <h1 className="text-[15px] font-medium leading-snug mb-2" style={{ color: "var(--color-text-primary)" }}>
-//           My technical background
-//         </h1>
-
-//         <div className="space-y-3">
-//           <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
-//             Full-stack developer with strong roots in the
-//             <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> JavaScript ecosystem</span>.
-//             I build end-to-end —
-//             <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> REST APIs</span>,
-//             <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> real-time systems</span>, and
-//             polished
-//             <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> React frontends</span>.
-//           </p>
-
-//           <div className="pl-3" style={{ borderLeft: "2px solid var(--color-border)" }}>
-//             <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
-//               The focus is always on writing clean, maintainable code that scales —
-//               not just making things work, but making them
-//               <span className="font-medium" style={{ color: "var(--color-text-primary)" }}> work well</span>.
-//             </p>
-//           </div>
-//         </div>
-//       </div>
-
-//       {/* Skill sections */}
-//       <div className="mt-4 space-y-1">
-//         <Section title="Frontend">
-//           <Pill icon={<SiReact color="#61dafb" />} label="React" />
-//           <Pill icon={<SiNextdotjs style={{ color: "var(--color-text-primary)" }} />} label="Next.js" />
-//           <Pill icon={<SiTailwindcss color="#38bdf8" />} label="Tailwind CSS" />
-//           <Pill icon={<SiShadcnui style={{ color: "var(--color-text-primary)" }} />} label="shadcn/ui" />
-//           <Pill icon={<SiJamstack color="#ef4444" />} label="TanStack" />
-//           <Pill icon={<BsFiletypeHtml color="#e34c26" />} label="HTML" />
-//           <Pill icon={<BsFiletypeCss color="#2965f1" />} label="CSS" />
-//         </Section>
-
-//         <Section title="Languages">
-//           <Pill icon={<SiJavascript color="#f0b429" />} label="JavaScript" />
-//           <Pill icon={<SiTypescript color="#3178c6" />} label="TypeScript" />
-//           <Pill icon={<SiPython color="#3572a5" />} label="Python" />
-//           <Pill icon={<SiPostgresql color="#336791" />} label="SQL" />
-//         </Section>
-
-//         <Section title="Backend">
-//           <Pill icon={<SiNodedotjs color="#5fa04e" />} label="Node.js" />
-//           <Pill icon={<SiExpress color="#888" />} label="Express.js" />
-//           <Pill icon={<SiPostgresql color="#336791" />} label="PostgreSQL" />
-//           <Pill icon={<SiMongodb color="#4db33d" />} label="MongoDB" />
-//           <Pill icon={<SiRedis color="#dc382d" />} label="Redis" />
-//           <Pill icon={<SiSupabase color="#3ecf8e" />} label="Supabase" />
-//         </Section>
-
-//         <Section title="DevOps & Cloud">
-//           <Pill icon={<SiDocker color="#2496ed" />} label="Docker" />
-//           <Pill icon={<SiVercel style={{ color: "var(--color-text-primary)" }} />} label="Vercel" />
-//           <Pill icon={<SiNetlify color="#00ad9f" />} label="Netlify" />
-//           <Pill icon={<SiGithub style={{ color: "var(--color-text-primary)" }} />} label="GitHub" />
-//         </Section>
-
-//         <Section title="Tools">
-//           <Pill icon={<SiPostman color="#ef5c00" />} label="Postman" />
-//           <Pill icon={<SiSwagger color="#85ea2d" />} label="Swagger" />
-//         </Section>
-
-//         <Section title="Concepts">
-//           <Pill icon={<TbBinaryTree color="#585858" />} label="DSA" />
-//           <Pill icon={<TbRepeat color="#585858" />} label="Agile" />
-//           <Pill icon={<TbLayersIntersect color="#585858" />} label="MVC" />
-//           <Pill icon={<TbApi color="#585858" />} label="REST APIs" />
-//         </Section>
-//       </div>
-
-//       {/* Footer */}
-//       <p className="text-[12px] leading-relaxed mt-4" style={{ color: "var(--color-text-secondary)" }}>
-//         Feel free to ask about any of these technologies, how I've used them in
-//         projects, or what I'm currently exploring.
-//       </p>
-
-//       <div className="mt-4">
-//         <DownLoadResumeButton />
-//       </div>
-//       <div>
-//         <ResponseFooter messageId={messageId} convoId={convoId} feedback={feedback as "dislike" | "like" | null | undefined} />
-//       </div>
-//     </div>
-//   );
-// }
-
 "use client";
 
 import React, { useEffect, useRef } from "react";
@@ -163,6 +14,9 @@ import Badge from "./Badge";
 import DownLoadResumeButton from "./DownLoadResumeButton";
 import ResponseFooter from "./ResponseFooter";
 import { HIDDEN } from "./ChatBlogs";
+import { useConversation } from "@/context/ConversationContext";
+
+const animatedMessages = new Set<string>();
 
 const Pill = ({ icon, label }: { icon: React.ReactNode; label: string }) => (
   <span
@@ -290,7 +144,7 @@ async function runSequence(
 
   for (const p of paragraphContents) {
     const el = document.getElementById(p.id);
-    await typewriterHTML(el, p.html, 12);
+    await typewriterHTML(el, p.html, 1);
     await new Promise((r) => setTimeout(r, 80));
   }
 
@@ -321,12 +175,32 @@ export default function ChatSkills({ messageId, convoId, feedback, onAnimationCo
   const footerBtnRef = useRef<HTMLDivElement>(null);
   const responseFooterRef = useRef<HTMLDivElement>(null);
 
+  const { setIsAiResponding } = useConversation()
+
   useEffect(() => {
     if (!document.getElementById("skills-blink-style")) {
       const style = document.createElement("style");
       style.id = "skills-blink-style";
       style.textContent = "@keyframes skills-blink { 50% { opacity: 0; } }";
       document.head.appendChild(style);
+    }
+
+    if (animatedMessages.has(messageId)) {
+      setTimeout(() => {
+        [badgeRef, headingRef, typeSectionRef, skillSectionsRef, footerRef, footerBtnRef, responseFooterRef].forEach((ref) => {
+          if (ref.current) {
+            ref.current.style.maxHeight = "none";
+            ref.current.style.overflow = "visible";
+            ref.current.style.opacity = "1";
+            ref.current.style.transform = "none";
+          }
+        });
+        paragraphContents.forEach((p) => {
+          const el = document.getElementById(p.id);
+          if (el) el.innerHTML = p.html;
+        });
+      }, 0);
+      return;
     }
 
     [badgeRef, headingRef, typeSectionRef, skillSectionsRef, footerRef, footerBtnRef, responseFooterRef].forEach((ref) => {
@@ -337,8 +211,8 @@ export default function ChatSkills({ messageId, convoId, feedback, onAnimationCo
       }
     });
 
-    const timer = setTimeout(() => {
-      runSequence(
+    const timer = setTimeout(async () => {
+      await runSequence(
         {
           badge: badgeRef,
           heading: headingRef,
@@ -350,6 +224,8 @@ export default function ChatSkills({ messageId, convoId, feedback, onAnimationCo
         },
         onAnimationComplete,
       );
+      animatedMessages.add(messageId);
+      setIsAiResponding(false);
     }, 150);
 
     return () => clearTimeout(timer);

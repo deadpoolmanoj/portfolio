@@ -8,6 +8,9 @@ import { ExternalLink } from "lucide-react";
 import { IoLogoGithub } from "react-icons/io";
 import Image from "next/image";
 import { HIDDEN } from "./ChatBlogs";
+import { useConversation } from "@/context/ConversationContext";
+
+const animatedMessages = new Set<string>();
 
 interface Project {
   title: string;
@@ -84,8 +87,8 @@ const PROJECTS: Project[] = [
     ],
     tags: ["Business Website", "Backend", "MongoDB", "Client Work"],
     status: "Archived",
-    year: "2024",
-    github: "#",
+    year: "2023",
+    // github: "#",
   },
 ];
 
@@ -130,7 +133,7 @@ const paragraphContents: { id: string; html: string }[] = [
   },
   {
     id: "proj-p3",
-    html: `What stands out isn't just the technology stack—it's the emphasis on practical software engineering. From real-time communication and API development to testing, debugging, optimization, and deployment, each project reflects my commitment to building reliable and maintainable applications from end to end.`,
+    html: `What stands out isn't just the technology stack — it's the emphasis on practical software engineering. From real-time communication and API development to testing, debugging, optimization, and deployment, each project reflects my commitment to building reliable and maintainable applications from end to end.`,
   },
 ];
 
@@ -175,6 +178,7 @@ async function runSequence(
     badge: React.RefObject<HTMLDivElement | null>;
     heading: React.RefObject<HTMLHeadingElement | null>;
     typeSection: React.RefObject<HTMLDivElement | null>;
+    proj3Wrapper: React.RefObject<HTMLDivElement | null>;
     projects: React.RefObject<HTMLDivElement | null>;
     footer: React.RefObject<HTMLParagraphElement | null>;
     footerBtn: React.RefObject<HTMLDivElement | null>;
@@ -186,15 +190,21 @@ async function runSequence(
   await fadeIn(refs.heading.current);
 
   if (refs.typeSection.current) {
-    refs.typeSection.current.style.maxHeight = 'none';
-    refs.typeSection.current.style.overflow = 'visible';
-    refs.typeSection.current.style.opacity = '1';
+    refs.typeSection.current.style.maxHeight = "none";
+    refs.typeSection.current.style.overflow = "visible";
+    refs.typeSection.current.style.opacity = "1";
   }
-  for (const p of paragraphContents) {
-    const el = document.getElementById(p.id);
-    await typewriterHTML(el, p.html, 12);
-    await new Promise((r) => setTimeout(r, 80));
-  }
+
+  const [p1, p2, p3] = paragraphContents;
+  await typewriterHTML(document.getElementById(p1.id), p1.html, 1);
+  await new Promise((r) => setTimeout(r, 80));
+  await typewriterHTML(document.getElementById(p2.id), p2.html, 1);
+  await new Promise((r) => setTimeout(r, 80));
+
+  // reveal the border wrapper just before typing p3
+  await fadeIn(refs.proj3Wrapper.current, 200);
+  await typewriterHTML(document.getElementById(p3.id), p3.html, 1);
+  await new Promise((r) => setTimeout(r, 80));
 
   await new Promise((r) => setTimeout(r, 120));
   await fadeIn(refs.projects.current);
@@ -286,7 +296,13 @@ const ProjectRow = ({ project, isLast }: { project: Project; isLast: boolean }) 
       {project.longDescription}
     </p>
 
-    <div className="pl-3 mb-3 space-y-1" style={{ borderLeft: "2px solid var(--color-border)" }}>
+    <div
+      className="pl-3 mb-3 space-y-1 rounded-r-md py-2 pr-2"
+      style={{
+        borderLeft: "2px solid #d4845a",
+        backgroundColor: "rgba(255, 172, 129, 0.06)",
+      }}
+    >
       {project.highlights.map((h, i) => (
         <p key={i} className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
           {h}
@@ -304,8 +320,11 @@ const ProjectRow = ({ project, isLast }: { project: Project; isLast: boolean }) 
           href={project.demo}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-1.5 text-[11px] font-medium text-white rounded-md px-3 py-1.5 no-underline"
-          style={{ backgroundColor: "var(--color-text-primary)" }}
+          className="inline-flex items-center gap-1.5 text-[11px] font-medium rounded-md px-3 py-1.5 no-underline"
+          style={{
+            backgroundColor: "var(--color-text-primary)",
+            color: "var(--color-bg-card)",
+          }}
         >
           <ExternalLink size={11} />
           Live
@@ -344,6 +363,9 @@ const ChatProjects = ({ messageId, convoId, feedback, onAnimationComplete }: Cha
   const footerRef = useRef<HTMLParagraphElement>(null);
   const footerBtnRef = useRef<HTMLDivElement>(null);
   const responseFooterRef = useRef<HTMLDivElement>(null);
+  const proj3WrapperRef = useRef<HTMLDivElement>(null);
+
+  const { setIsAiResponding } = useConversation()
 
   useEffect(() => {
     if (!document.getElementById("proj-blink-style")) {
@@ -353,8 +375,25 @@ const ChatProjects = ({ messageId, convoId, feedback, onAnimationComplete }: Cha
       document.head.appendChild(style);
     }
 
-    // Hide all animated elements — fadeIn() will expand them in sequence
-    [badgeRef, headingRef, typeSectionRef, projectsRef, footerRef, footerBtnRef, responseFooterRef].forEach((ref) => {
+    if (animatedMessages.has(messageId)) {
+      setTimeout(() => {
+        [badgeRef, headingRef, typeSectionRef, proj3WrapperRef, projectsRef, footerRef, footerBtnRef, responseFooterRef].forEach((ref) => {
+          if (ref.current) {
+            ref.current.style.maxHeight = 'none';
+            ref.current.style.overflow = 'visible';
+            ref.current.style.opacity = '1';
+            ref.current.style.transform = 'none';
+          }
+        });
+        paragraphContents.forEach((p) => {
+          const el = document.getElementById(p.id);
+          if (el) el.innerHTML = p.html;
+        });
+      }, 0);
+      return;
+    }
+
+    [badgeRef, headingRef, typeSectionRef, proj3WrapperRef, projectsRef, footerRef, footerBtnRef, responseFooterRef].forEach((ref) => {
       if (ref.current) {
         ref.current.style.overflow = "hidden";
         ref.current.style.maxHeight = "0px";
@@ -362,19 +401,19 @@ const ChatProjects = ({ messageId, convoId, feedback, onAnimationComplete }: Cha
       }
     });
 
-    const timer = setTimeout(() => {
-      runSequence(
-        {
-          badge: badgeRef,
-          heading: headingRef,
-          typeSection: typeSectionRef,
-          projects: projectsRef,
-          footer: footerRef,
-          footerBtn: footerBtnRef,
-          responseFooter: responseFooterRef,
-        },
-        onAnimationComplete,
-      );
+    const timer = setTimeout(async () => {
+      await runSequence({
+        badge: badgeRef,
+        heading: headingRef,
+        typeSection: typeSectionRef,
+        proj3Wrapper: proj3WrapperRef,
+        projects: projectsRef,
+        footer: footerRef,
+        footerBtn: footerBtnRef,
+        responseFooter: responseFooterRef,
+      });
+      animatedMessages.add(messageId);
+      setIsAiResponding(false);
     }, 150);
 
     return () => clearTimeout(timer);
@@ -395,7 +434,7 @@ const ChatProjects = ({ messageId, convoId, feedback, onAnimationComplete }: Cha
         <h1
           ref={headingRef}
           className="text-[15px] font-medium leading-snug mb-2"
-          style={{ ...HIDDEN , color: "var(--color-text-primary)" }}
+          style={{ ...HIDDEN, color: "var(--color-text-primary)" }}
         >
           Things I've built from scratch
         </h1>
@@ -404,7 +443,7 @@ const ChatProjects = ({ messageId, convoId, feedback, onAnimationComplete }: Cha
         <div ref={typeSectionRef} className="space-y-3" style={HIDDEN}>
           <p id="proj-p1" className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }} />
           <p id="proj-p2" className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }} />
-          <div className="pl-3" style={{ borderLeft: "2px solid var(--color-border)" }}>
+          <div ref={proj3WrapperRef} className="pl-3 py-2 pr-2" style={{ backgroundColor: 'rgba(255, 172, 129, 0.06)', borderLeft: "2px solid #d4845a", ...HIDDEN }}>
             <p id="proj-p3" className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }} />
           </div>
         </div>
@@ -421,7 +460,7 @@ const ChatProjects = ({ messageId, convoId, feedback, onAnimationComplete }: Cha
       <p
         ref={footerRef}
         className="text-[12px] leading-relaxed mt-4"
-        style={{ ...HIDDEN ,color: "var(--color-text-secondary)" }}
+        style={{ ...HIDDEN, color: "var(--color-text-secondary)" }}
       >
         These projects highlight different aspects of my work — from frontend engineering and system design
         to AI-powered applications. Feel free to ask about the architecture, challenges, or technical decisions

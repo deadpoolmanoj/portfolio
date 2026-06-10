@@ -5,6 +5,9 @@ import Badge from './Badge';
 import DownLoadResumeButton from './DownLoadResumeButton';
 import ResponseFooter from './ResponseFooter';
 import { HIDDEN } from './ChatBlogs';
+import { useConversation } from '@/context/ConversationContext';
+
+const animatedMessages = new Set<string>();
 
 interface ChatEducationProps {
   messageId: string;
@@ -136,7 +139,7 @@ async function runSequence(refs: {
 
   for (const p of paragraphContents) {
     const el = document.getElementById(p.id);
-    await typewriterHTML(el, p.html, 12);
+    await typewriterHTML(el, p.html, 1);
     await new Promise((r) => setTimeout(r, 80));
   }
 
@@ -160,6 +163,8 @@ const ChatEducation = ({ messageId, convoId, feedback }: ChatEducationProps) => 
   const footerBtnRef = useRef<HTMLDivElement>(null);
   const responseFooterRef = useRef<HTMLDivElement>(null);
 
+  const { setIsAiResponding } = useConversation()
+
   useEffect(() => {
     if (!document.getElementById('edu-blink-style')) {
       const style = document.createElement('style');
@@ -168,7 +173,24 @@ const ChatEducation = ({ messageId, convoId, feedback }: ChatEducationProps) => 
       document.head.appendChild(style);
     }
 
-    // Hide all animated elements — fadeIn() will expand them in sequence
+    if (animatedMessages.has(messageId)) {
+      setTimeout(() => {
+        [badgeRef, headingRef, typeSectionRef, timelineRef, footerRef, footerBtnRef, responseFooterRef].forEach((ref) => {
+          if (ref.current) {
+            ref.current.style.maxHeight = 'none';
+            ref.current.style.overflow = 'visible';
+            ref.current.style.opacity = '1';
+            ref.current.style.transform = 'none';
+          }
+        });
+        paragraphContents.forEach((p) => {
+          const el = document.getElementById(p.id);
+          if (el) el.innerHTML = p.html;
+        });
+      }, 0);
+      return;
+    }
+
     [badgeRef, headingRef, typeSectionRef, timelineRef, footerRef, footerBtnRef, responseFooterRef].forEach((ref) => {
       if (ref.current) {
         ref.current.style.overflow = 'hidden';
@@ -177,8 +199,8 @@ const ChatEducation = ({ messageId, convoId, feedback }: ChatEducationProps) => 
       }
     });
 
-    const timer = setTimeout(() => {
-      runSequence({
+    const timer = setTimeout(async () => {
+      await runSequence({
         badge: badgeRef,
         heading: headingRef,
         typeSection: typeSectionRef,
@@ -187,6 +209,8 @@ const ChatEducation = ({ messageId, convoId, feedback }: ChatEducationProps) => 
         footerBtn: footerBtnRef,
         responseFooter: responseFooterRef,
       });
+      animatedMessages.add(messageId);
+      setIsAiResponding(false);
     }, 150);
 
     return () => clearTimeout(timer);
@@ -282,7 +306,7 @@ const ChatEducation = ({ messageId, convoId, feedback }: ChatEducationProps) => 
 
       {/* ── ResponseFooter — last to appear ────────────────── */}
       <div ref={responseFooterRef} style={HIDDEN}>
-        <ResponseFooter messageId={messageId} convoId={convoId} feedback={feedback} />
+        <ResponseFooter messageId={messageId} convoId={convoId} feedback={feedback as "dislike" | "like" | null | undefined} />
       </div>
 
     </div>

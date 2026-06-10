@@ -16,6 +16,7 @@ export default function InputBar({ convoId }: { convoId: string }) {
         stopResponse,
         startNewConversation,
         isConversationOver,
+        isAiResponding,
     } = useConversation();
 
     const conversationOver = isConversationOver(convoId);
@@ -51,13 +52,13 @@ export default function InputBar({ convoId }: { convoId: string }) {
                     }}
                 >
                     <textarea
-                        disabled={conversationOver}
+                        disabled={conversationOver || isResponseGenerating || isAiResponding}
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === "Enter" && !e.shiftKey) {
                                 e.preventDefault();
-                                if (isResponseGenerating) return;
+                                if (isResponseGenerating || isAiResponding) return;
                                 if (editMessageId) {
                                     saveEditedMessage(convoId);
                                 } else {
@@ -76,7 +77,7 @@ export default function InputBar({ convoId }: { convoId: string }) {
                             ↵ enter to send · shift+enter for new line
                         </span>
 
-                        {isResponseGenerating ? (
+                        {(isResponseGenerating || isAiResponding) ? (
                             <button
                                 onClick={stopResponse}
                                 className="p-2 rounded-full text-white transition-all duration-150 active:scale-95"

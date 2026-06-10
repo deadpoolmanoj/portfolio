@@ -44,6 +44,9 @@ type ConversationContextType = {
 
     isConversationOver: (convoId: string) => boolean;
     activeConvoId: string | null;
+
+    isAiResponding: boolean;
+    setIsAiResponding: (val: boolean) => void;
 }
 
 const ConversationContext = createContext<ConversationContextType | null>(null);
@@ -77,7 +80,8 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
     const [editMessageId, setEditMessageId] = useState<string | null>(null);
     const [isResponseGenerating, setIsResponseGenerating] = useState(false);
     const [activeConvoId, setActiveConvoId] = useState<string | null>(null);
-    
+    const [isAiResponding, setIsAiResponding] = useState(false);
+
     const stopRequestedRef = useRef(false);
 
     function isConversationOver(convoId: string): boolean {
@@ -166,6 +170,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
 
             const responseId = crypto.randomUUID();
 
+            setIsAiResponding(true);
             replaceLoading(convoId, loadingId, {
                 id: crypto.randomUUID(),
                 role: "assistant",
@@ -173,6 +178,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
                 content: getComponentForIntent(result.intent, responseId, convoId),
             });
             setIsResponseGenerating(false);
+            // setIsAiResponding(false);
             return;
         }
 
@@ -333,6 +339,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
 
             const responseId = crypto.randomUUID();
 
+            setIsAiResponding(true);
             replaceLoading(convoId, loadingId, {
                 id: crypto.randomUUID(),
                 role: "assistant",
@@ -340,6 +347,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
                 content: getComponentForIntent(result.intent, responseId, convoId),
             });
             setIsResponseGenerating(false);
+            // setIsAiResponding(false);
             return;
         }
 
@@ -412,6 +420,8 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
             startNewConversation,
             isConversationOver,
             activeConvoId,
+            isAiResponding,
+            setIsAiResponding,
         }}>
             {children}
         </ConversationContext.Provider>
