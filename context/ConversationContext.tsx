@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import ChatProjects from "@/app/components/ChatProjects";
 import ChatSkills from "@/app/components/ChatSkills";
 import ChatEducation from "@/app/components/ChatEducation";
+import ChatBlogs from "@/app/components/ChatBlogs";
 
 export type Role = 'user' | 'assistant'
 
@@ -56,11 +57,12 @@ function createConversation(firstMessage: string): Conversation {
     };
 }
 
-function getComponentForIntent(intent: string): ReactNode {
+function getComponentForIntent(intent: string, messageId: string, convoId: string): ReactNode {
     switch (intent) {
-        case "projects": return <ChatProjects />;
-        case "skills": return <ChatSkills />;
-        case "education": return <ChatEducation />;
+        case "projects": return <ChatProjects messageId={messageId} convoId={convoId} />;
+        case "skills": return <ChatSkills messageId={messageId} convoId={convoId} />;
+        case "education": return <ChatEducation messageId={messageId} convoId={convoId} />;
+        case "blogs": return <ChatBlogs messageId={messageId} convoId={convoId} />;
         default: return null;
     }
 }
@@ -75,6 +77,7 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
     const [editMessageId, setEditMessageId] = useState<string | null>(null);
     const [isResponseGenerating, setIsResponseGenerating] = useState(false);
     const [activeConvoId, setActiveConvoId] = useState<string | null>(null);
+    
     const stopRequestedRef = useRef(false);
 
     function isConversationOver(convoId: string): boolean {
@@ -161,11 +164,13 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
                 return;
             }
 
+            const responseId = crypto.randomUUID();
+
             replaceLoading(convoId, loadingId, {
                 id: crypto.randomUUID(),
                 role: "assistant",
-                type: result.intent as "projects" | "skills" | "education",
-                content: getComponentForIntent(result.intent),
+                type: result.intent,
+                content: getComponentForIntent(result.intent, responseId, convoId),
             });
             setIsResponseGenerating(false);
             return;
@@ -326,11 +331,13 @@ export function ConversationProvider({ children }: { children: ReactNode }) {
                 return;
             }
 
+            const responseId = crypto.randomUUID();
+
             replaceLoading(convoId, loadingId, {
                 id: crypto.randomUUID(),
                 role: "assistant",
                 type: result.intent as "projects" | "skills" | "education",
-                content: getComponentForIntent(result.intent),
+                content: getComponentForIntent(result.intent, responseId, convoId),
             });
             setIsResponseGenerating(false);
             return;

@@ -20,6 +20,9 @@ export type SkillsSubIntent =
   | "skills_overview"
   | "skills_question";
 
+export type ResumeSubIntent =
+  | "resume_download" | "resume_experience" | "resume_question" | "resume_overview";
+
 export type ProjectsSubIntent =
   | "projects_specific"
   | "projects_overview"
@@ -36,7 +39,7 @@ export type EducationSubIntent =
 export interface ParsedIntent {
   intent: IntentType;
   hasSubIntent: boolean;
-  subIntent?: SkillsSubIntent | ProjectsSubIntent | EducationSubIntent;
+  subIntent?: SkillsSubIntent | ProjectsSubIntent | EducationSubIntent | ResumeSubIntent;
   subjectKeyword?: string;
   context?: string;
 }
@@ -93,22 +96,7 @@ const INTENT_KEYWORDS: { intent: IntentType; keywords: string[] }[] = [
   {
     intent: "askManoj",
     keywords: [
-      "what is this app",
-      "what can you do",
-      "what does this app do",
-      "what is this chat",
-      "what can this do",
-      "what are you",
-      "who are you",
-      "what is askmanoj",
-      "how does this work",
-      "what can i ask",
-      "what should i ask",
-      "help",
-      "capabilities",
-      "features",
-      "what do you know",
-      "what questions can i ask",
+      "ask manoj"
     ],
   },
   {
@@ -159,6 +147,12 @@ const TOOLS_KEYWORDS = [
 const CONCEPTS_KEYWORDS = [
   "dsa", "data structure", "algorithm", "agile", "scrum", "mvc",
   "design pattern", "architecture", "concept",
+];
+
+const RESUME_QUESTION_KEYWORDS = [
+  "what's on", "what is on", "contains", "include", "sections",
+  "how long", "pages", "format", "ats", "template", "update",
+  "latest", "current", "good", "review", "feedback", "can i see"
 ];
 
 // ─────────────────────────────────────────────────────────────
@@ -466,6 +460,44 @@ function detectEducationSubIntent(text: string): {
     hasSubIntent: false,
   };
 }
+function detectResumeSubIntent(text: string): {
+  subIntent: ResumeSubIntent;
+  hasSubIntent: boolean;
+  subjectKeyword?: string;
+  context?: string;
+} {
+  if (anyMatch(text, ["download", "pdf", "get", "save", "view", "open", "link"])) {
+    return {
+      subIntent: "resume_download",
+      hasSubIntent: false,
+    };
+  }
+
+  if (anyMatch(text, ["experience", "work", "job", "internship", "projects",
+    "skills", "what's on", "contains", "include", "sections", "has"])) {
+    return {
+      subIntent: "resume_experience",
+      hasSubIntent: true,
+      subjectKeyword: "resume contents",
+      context: `User is asking what's on Manoj's resume: "${text}". Describe the key sections — work experience (HAQMS internship, freelance), projects (Skribbbly, Finovex, Task Manager), skills (Next.js, TypeScript, Node.js, PostgreSQL, Socket.io), and education (BSc IT Mumbai, MCA Sikkim Manipal). Keep it conversational.`,
+    };
+  }
+
+  if (anyMatch(text, RESUME_QUESTION_KEYWORDS)) {
+    const keyword = firstMatch(text, RESUME_QUESTION_KEYWORDS);
+    return {
+      subIntent: "resume_question",
+      hasSubIntent: true,
+      subjectKeyword: keyword,
+      context: `User is asking a question about Manoj's resume: "${text}". Answer based on his background and resume format. Be direct and helpful.`,
+    };
+  }
+
+  return {
+    subIntent: "resume_overview",
+    hasSubIntent: false,
+  };
+}
 
 // ─────────────────────────────────────────────────────────────
 // MAIN EXPORT
@@ -499,7 +531,8 @@ export function classifyUserInput(input: string): ParsedIntent {
   }
 
   if (intent === "resume") {
-    return { intent, hasSubIntent: false, };
+    const result = detectResumeSubIntent(text);
+    return { intent, ...result };
   }
 
   return { intent: "unknown", hasSubIntent: false };

@@ -12,31 +12,49 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | null>(null);
 
+
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
+  const [mounted, setMounted] = useState(false);
 
-  // on mount read from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem("theme") as Theme | null;
+    const saved = localStorage.getItem("theme");
+
     if (saved === "dark" || saved === "light") {
       setTheme(saved);
-      document.documentElement.classList.toggle("dark", saved === "dark");
     }
+
+    setMounted(true);
   }, []);
 
+  useEffect(() => {
+    if (!mounted) return;
+
+    document.documentElement.classList.toggle(
+      "dark",
+      theme === "dark"
+    );
+
+    localStorage.setItem("theme", theme);
+  }, [theme, mounted]);
+
   function toggleTheme() {
-    const next = theme === "light" ? "dark" : "light";
-    setTheme(next);
-    localStorage.setItem("theme", next);
-    document.documentElement.classList.toggle("dark", next === "dark");
+    setTheme(prev => prev === "light" ? "dark" : "light");
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, isDark: theme === "dark" }}>
+    <ThemeContext.Provider
+      value={{
+        theme,
+        toggleTheme,
+        isDark: theme === "dark",
+      }}
+    >
       {children}
     </ThemeContext.Provider>
   );
 }
+
 
 export function useTheme() {
   const ctx = useContext(ThemeContext);

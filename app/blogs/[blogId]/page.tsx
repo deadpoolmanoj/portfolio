@@ -97,14 +97,14 @@ export default function BlogPage({ params }: BlogPageProps) {
             <div className="max-w-2xl mx-auto px-5 py-10">
 
                 {/* Back link */}
-                <button
+                {/* <button
                     onClick={() => router.back()}
                     className="inline-flex items-center gap-1.5 text-[12px] mb-8 transition-opacity hover:opacity-70"
                     style={{ color: "var(--color-text-muted)" }}
                 >
                     <ArrowLeft size={13} />
                     Back
-                </button>
+                </button> */}
 
                 {/* Meta row */}
                 <div className="flex items-center gap-3 mb-5">
@@ -179,7 +179,7 @@ export default function BlogPage({ params }: BlogPageProps) {
                 />
 
                 {/* Back to blogs */}
-                <button
+                {/* <button
                     onClick={() => router.back()}
                     className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-[12px] transition-all"
                     style={{
@@ -190,7 +190,15 @@ export default function BlogPage({ params }: BlogPageProps) {
                 >
                     <ArrowLeft size={13} />
                     Back
-                </button>
+                </button> */}
+                <div className="text-center py-6">
+                    <p
+                        className="text-[12px] leading-relaxed"
+                        style={{ color: "var(--color-text-muted)" }}
+                    >
+                        Built with curiosity, shared with intention.
+                    </p>
+                </div>
             </div>
         </div>
     );

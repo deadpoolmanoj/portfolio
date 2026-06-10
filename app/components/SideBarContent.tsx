@@ -1,9 +1,9 @@
 'use client'
 
-import { useConversation } from '@/context/ConversationContext';
+import { Conversation, useConversation } from '@/context/ConversationContext';
 import { useTheme } from '@/context/ThemeContext';
 import { truncateText } from '@/utils/textFormatingHelper';
-import { Brain, CirclePlus, Dock, FolderKanban, Moon, PanelLeft, School, Sun, Wrench, X } from 'lucide-react';
+import { Brain, CirclePlus, Dock, DockIcon, File, FolderKanban, Moon, PanelLeft, School, Sun, Wrench, X } from 'lucide-react';
 import { usePathname } from "next/navigation";
 
 type SidebarContentProps = {
@@ -48,6 +48,11 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
         }
     };
 
+    function getConvoTitle(convo: Conversation): string {
+        const firstUserMessage = convo.messages?.find(m => m.role === "user")?.content as string;
+        return firstUserMessage?.slice(0, 40) || "New Chat";
+    }
+
     return (
         <div
             className="w-full h-[100dvh] flex flex-col"
@@ -57,7 +62,7 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
             <div className={`flex items-center px-3 pt-4 pb-3 ${sidebarOpen ? "justify-between" : "justify-center"}`}>
                 {sidebarOpen && (
                     <div className="flex items-center gap-2">
-                        <div className="w-7 h-7 rounded-full" style={{ backgroundColor: "var(--color-accent)" }} />
+                        {/* <div className="w-7 h-7 rounded-full" style={{ backgroundColor: "var(--color-accent)" }} /> */}
                         <span className="text-[13px] font-medium" style={{ color: "var(--color-text-primary)" }}>
                             AskManoj
                         </span>
@@ -194,6 +199,27 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
                         {sidebarOpen && "Blogs"}
                     </button>
                 </li>
+                <li>
+                    <button
+                        onClick={() =>
+                            handleSidebarAction(() => typeSelected("resume"))
+                        }
+                        className={`w-full flex items-center gap-2.5 text-[12px] font-medium rounded-lg transition-colors
+                            ${sidebarOpen ? "px-3 py-2" : "p-2 justify-center"}`}
+                        style={{ color: "var(--color-text-secondary)" }}
+                        onMouseEnter={e => {
+                            (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-sidebar-hover)";
+                            (e.currentTarget as HTMLElement).style.color = "var(--color-text-primary)";
+                        }}
+                        onMouseLeave={e => {
+                            (e.currentTarget as HTMLElement).style.backgroundColor = "transparent";
+                            (e.currentTarget as HTMLElement).style.color = "var(--color-text-secondary)";
+                        }}
+                    >
+                        <File size={14} className="shrink-0" style={{ color: "var(--color-text-muted)" }} />
+                        {sidebarOpen && "Resume"}
+                    </button>
+                </li>
             </ul>
 
             <div className="mx-3 my-3 border-t" style={{ borderColor: "var(--color-border-light)" }} />
@@ -231,7 +257,7 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
                                         }
                                     }}
                                 >
-                                    {truncateText(c.title, 24)}
+                                    {truncateText(getConvoTitle(c), 24)}
                                 </button>
                             </li>
                         ))}
@@ -245,7 +271,7 @@ const SidebarContent = ({ sidebarOpen, onToggle, onClose, isMobile = false }: Si
             {sidebarOpen && (
                 <div
                     onClick={() =>
-                        handleSidebarAction(() => sendUserMessage("ask manoj", activeConvoId ?? undefined))
+                        handleSidebarAction(() => sendUserMessage("Ask Manoj", activeConvoId ?? undefined))
                     }
                     className="mx-2 mb-2 p-3 rounded-xl flex items-center gap-2.5 cursor-pointer active:scale-[0.98] transition-all duration-150"
                     style={{

@@ -6,6 +6,7 @@ import TopNavBar from "./components/TopNavBar";
 import { ConversationProvider } from "@/context/ConversationContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import ThemeToggle from "./components/ThemeToggole";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,13 +43,26 @@ export default function RootLayout({
         ${instrumentSerif.variable}
         h-full antialiased
       `}
+      suppressHydrationWarning
     >
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function () {
+              const theme = localStorage.getItem('theme');
+              if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+              }
+            })();`,
+          }}
+        />
+      </head>
       <body
         className="min-h-full flex flex-col md:flex-row"
         style={{ backgroundColor: "var(--color-bg-page)", color: "var(--color-text-primary)" }}
       >
         <ThemeProvider>
-          <ThemeToggle/>
+          <ThemeToggle />
           <ConversationProvider>
             <TopNavBar />
             <SideBar />

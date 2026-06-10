@@ -1,9 +1,17 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { BookOpen, ExternalLink, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { BLOGS } from "@/utils/blogs";
+import ResponseFooter from "./ResponseFooter";
+
+export const HIDDEN: React.CSSProperties = {
+  overflow: "hidden",
+  maxHeight: "0px",
+  opacity: 0,
+};
+
 
 const BlogMeta = ({ tag, readTime }: { tag: string; readTime: string }) => (
   <div className="flex items-center gap-3 mt-2 text-[10px]" style={{ color: "var(--color-text-muted)" }}>
@@ -34,7 +42,7 @@ const FeaturedBlog = ({ blog }: { blog: (typeof BLOGS)[0] }) => {
         border: "1px solid var(--color-border)",
         backgroundColor: "var(--color-bg-card)",
       }}
-      onClick={() => router.push(`/blogs/${blog.id}`)}
+      onClick={() => window.open(`/blogs/${blog.id}`, '_blank')}
     >
       <div className="w-full h-40 relative overflow-hidden">
         <img
@@ -76,7 +84,7 @@ const CompactBlog = ({ blog }: { blog: (typeof BLOGS)[0] }) => {
         border: "1px solid var(--color-border)",
         backgroundColor: "var(--color-bg-card)",
       }}
-      onClick={() => router.push(`/blogs/${blog.id}`)}
+      onClick={() => window.open(`/blogs/${blog.id}`, '_blank')}
       onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)"}
       onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-card)"}
     >
@@ -96,14 +104,170 @@ const CompactBlog = ({ blog }: { blog: (typeof BLOGS)[0] }) => {
   );
 };
 
-const ChatBlogs = () => {
+/* ── helpers ─────────────────────────────────────────────────── */
+
+function fadeIn(el: HTMLElement | null, durationMs = 400): Promise<void> {
+  return new Promise((resolve) => {
+    if (!el) { resolve(); return; }
+
+    el.style.overflow = "hidden";
+    el.style.maxHeight = "0px";
+    el.style.opacity = "0";
+    el.style.transform = "translateY(6px)";
+    void el.offsetHeight;
+
+    el.style.maxHeight = "9999px";
+    const naturalHeight = el.scrollHeight;
+    el.style.maxHeight = "0px";
+    void el.offsetHeight;
+
+    el.style.transition = `opacity ${durationMs}ms ease, transform ${durationMs}ms ease, max-height ${durationMs}ms ease`;
+    el.style.maxHeight = `${naturalHeight}px`;
+    el.style.opacity = "1";
+    el.style.transform = "translateY(0)";
+
+    setTimeout(() => {
+      el.style.maxHeight = "none";
+      el.style.overflow = "visible";
+      resolve();
+    }, durationMs);
+  });
+}
+
+function typewriterHTML(
+  el: HTMLElement | null,
+  html: string,
+  speed = 4,
+): Promise<void> {
+  return new Promise((resolve) => {
+    if (!el) { resolve(); return; }
+
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    const plain = tmp.textContent ?? "";
+
+    let charIdx = 0;
+
+    const cursor = document.createElement("span");
+    cursor.style.cssText =
+      "display:inline-block;width:1px;height:1em;background:var(--color-text-primary);margin-left:1px;vertical-align:text-bottom;animation:blogs-blink 0.7s step-end infinite;";
+    el.innerHTML = "";
+    el.appendChild(cursor);
+
+    function tick() {
+      if (charIdx >= plain.length) {
+        el!.innerHTML = html;
+        resolve();
+        return;
+      }
+      charIdx++;
+      el!.textContent = plain.substring(0, charIdx);
+      el!.appendChild(cursor);
+      setTimeout(tick, speed);
+    }
+
+    tick();
+  });
+}
+
+const paragraphContents: { id: string; html: string }[] = [
+  {
+    id: "blogs-p1",
+    html: `Honest write-ups on building real projects — what worked, what didn't, and what I'd do differently.`,
+  },
+];
+
+async function runSequence(
+  refs: {
+    header: React.RefObject<HTMLDivElement | null>;
+    typeSection: React.RefObject<HTMLDivElement | null>;
+    featured: React.RefObject<HTMLDivElement | null>;
+    grid: React.RefObject<HTMLDivElement | null>;
+    footerNote: React.RefObject<HTMLDivElement | null>;
+    responseFooter: React.RefObject<HTMLDivElement | null>;
+  },
+  onDone?: () => void,
+) {
+  await fadeIn(refs.header.current);
+
+  if (refs.typeSection.current) {
+    refs.typeSection.current.style.maxHeight = "none";
+    refs.typeSection.current.style.overflow = "visible";
+    refs.typeSection.current.style.opacity = "1";
+  }
+
+  for (const p of paragraphContents) {
+    const el = document.getElementById(p.id);
+    await typewriterHTML(el, p.html, 12);
+    await new Promise((r) => setTimeout(r, 80));
+  }
+
+  await new Promise((r) => setTimeout(r, 120));
+  await fadeIn(refs.featured.current);
+  await fadeIn(refs.grid.current);
+  await fadeIn(refs.footerNote.current);
+  await fadeIn(refs.responseFooter.current);
+
+  onDone?.();
+}
+
+/* ── main component ──────────────────────────────────────────── */
+
+interface ChatBlogsProps {
+  messageId: string;
+  convoId: string;
+  feedback?: string;
+  onAnimationComplete?: () => void;
+}
+
+const ChatBlogs = ({ messageId, convoId, feedback, onAnimationComplete }: ChatBlogsProps) => {
   const [featured, ...rest] = BLOGS;
+
+  const headerRef = useRef<HTMLDivElement>(null);
+  const typeSectionRef = useRef<HTMLDivElement>(null);
+  const featuredRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
+  const footerNoteRef = useRef<HTMLDivElement>(null);
+  const responseFooterRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!document.getElementById("blogs-blink-style")) {
+      const style = document.createElement("style");
+      style.id = "blogs-blink-style";
+      style.textContent = "@keyframes blogs-blink { 50% { opacity: 0; } }";
+      document.head.appendChild(style);
+    }
+
+    [headerRef, typeSectionRef, featuredRef, gridRef, footerNoteRef, responseFooterRef].forEach((ref) => {
+      if (ref.current) {
+        ref.current.style.overflow = "hidden";
+        ref.current.style.maxHeight = "0px";
+        ref.current.style.opacity = "0";
+      }
+    });
+
+    const timer = setTimeout(() => {
+      runSequence(
+        {
+          header: headerRef,
+          typeSection: typeSectionRef,
+          featured: featuredRef,
+          grid: gridRef,
+          footerNote: footerNoteRef,
+          responseFooter: responseFooterRef,
+        },
+        onAnimationComplete,
+      );
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="w-full">
 
-      {/* Header */}
-      <div className="mb-4">
+      {/* ── Header ─────────────────────────────────────────── */}
+      <div ref={headerRef} style={HIDDEN} className="mb-4">
         <div className="flex items-center gap-2 mb-2">
           <div
             className="p-1.5 rounded-md"
@@ -118,23 +282,28 @@ const ChatBlogs = () => {
             Blogs & Writing
           </p>
         </div>
-        <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
-          Honest write-ups on building real projects — what worked, what didn't, and what I'd do differently.
-        </p>
       </div>
 
-      {/* Featured */}
-      <FeaturedBlog blog={featured} />
+      {/* ── Typewriter description ──────────────────────────── */}
+      <div ref={typeSectionRef} className="mb-4">
+        <p id="blogs-p1" className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }} />
+      </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+      {/* ── Featured ───────────────────────────────────────── */}
+      <div ref={featuredRef} style={HIDDEN}>
+        <FeaturedBlog blog={featured} />
+      </div>
+
+      {/* ── Grid ───────────────────────────────────────────── */}
+      <div ref={gridRef} className="grid grid-cols-1 md:grid-cols-2 gap-2" style={HIDDEN}>
         {rest.map((blog) => (
           <CompactBlog key={blog.id} blog={blog} />
         ))}
       </div>
 
-      {/* Footer */}
+      {/* ── Footer note ────────────────────────────────────── */}
       <div
+        ref={footerNoteRef}
         className="mt-4 p-3 rounded-xl"
         style={{
           border: "1px solid var(--color-border)",
@@ -148,6 +317,12 @@ const ChatBlogs = () => {
           </span>
         </p>
       </div>
+
+      {/* ── ResponseFooter — last to appear ────────────────── */}
+      <div ref={responseFooterRef} style={HIDDEN}>
+        <ResponseFooter messageId={messageId} convoId={convoId} feedback={feedback as "dislike" | "like" | null | undefined} />
+      </div>
+
     </div>
   );
 };
