@@ -117,7 +117,7 @@ async function runSequence(
 interface ChatResumeProps {
   messageId: string;
   convoId: string;
-  feedback?: string;
+  feedback?: "like" | "dislike" | null;
   onAnimationComplete?: () => void;
 }
 

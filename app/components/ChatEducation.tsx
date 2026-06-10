@@ -12,7 +12,7 @@ const animatedMessages = new Set<string>();
 interface ChatEducationProps {
   messageId: string;
   convoId: string;
-  feedback?: string;
+  feedback?: "like" | "dislike" | null;
 }
 
 const paragraphContents: { id: string; html: string }[] = [

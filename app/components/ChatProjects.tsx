@@ -351,7 +351,7 @@ const ProjectRow = ({ project, isLast }: { project: Project; isLast: boolean }) 
 interface ChatProjectsProps {
   messageId: string;
   convoId: string;
-  feedback?: string;
+  feedback?: "like" | "dislike" | null;
   onAnimationComplete?: () => void;
 }
 

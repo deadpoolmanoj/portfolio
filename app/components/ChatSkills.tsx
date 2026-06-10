@@ -162,7 +162,7 @@ async function runSequence(
 interface ChatSkillsProps {
   messageId: string;
   convoId: string;
-  feedback?: string;
+  feedback?: "like" | "dislike" | null;
   onAnimationComplete?: () => void;
 }
 

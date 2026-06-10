@@ -136,7 +136,7 @@ async function runSequence(
 interface AskManojProps {
   messageId: string;
   convoId: string;
-  feedback?: string;
+  feedback?: "like" | "dislike" | null;
   onAnimationComplete?: () => void;
 }
 

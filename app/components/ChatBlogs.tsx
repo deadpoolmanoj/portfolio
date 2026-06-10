@@ -219,7 +219,7 @@ async function runSequence(
 interface ChatBlogsProps {
   messageId: string;
   convoId: string;
-  feedback?: string;
+  feedback?: "like" | "dislike" | null;
   onAnimationComplete?: () => void;
 }
 
