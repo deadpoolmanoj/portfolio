@@ -6,6 +6,7 @@ import SidebarContent from './SideBarContent';
 import { getUserEnvironment, UserEnvironment } from "@/utils/userMetaData";
 import { Sun, Cloud, CloudRain, CloudSnow } from "lucide-react";
 import ThemeToggle from './ThemeToggole';
+import { usePathname } from "next/navigation";
 
 export const fallbackWeather: UserEnvironment = {
     city: "India",
@@ -25,9 +26,14 @@ export function getWeatherIcon(condition?: string) {
 }
 
 const TopNavBar = () => {
+    const pathname = usePathname();
+
+    const isBlogPage = pathname.startsWith("/blogs");
+
+    if (isBlogPage) return null;
+
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [weather, setWeather] = useState<UserEnvironment | null>(null);
-    // const { sendUserMessage } = useConversation();
 
     useEffect(() => {
         async function loadWeather() {
