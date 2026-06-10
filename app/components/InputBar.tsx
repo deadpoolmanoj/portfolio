@@ -5,7 +5,7 @@ import { useConversation } from "@/context/ConversationContext";
 import { useEffect, useState } from "react";
 import LimitBanner from "./LimitBanner";
 
-export default function InputBar({ convoId }: { convoId: string }) {
+export default function InputBar({ convoId, isAtCenter }: { convoId: string, isAtCenter?: boolean }) {
     const {
         message,
         setMessage,
@@ -27,9 +27,9 @@ export default function InputBar({ convoId }: { convoId: string }) {
     }, [conversationOver]);
 
     const shouldShowLimitBanner = conversationOver && !dismissedBanner;
-
+    
     return (
-        <div className="absolute bottom-0 max-w-3xl w-full px-2 md:px-2 gap-0 z-30 rounded-t-full">
+        <div className={`absolute bottom-0 max-w-3xl w-full px-2 md:px-2 gap-0 z-30 rounded-t-full`}>
             {shouldShowLimitBanner && (
                 <div className="absolute bottom-full left-2 right-2 mb-3 z-40">
                     <LimitBanner
@@ -73,9 +73,14 @@ export default function InputBar({ convoId }: { convoId: string }) {
                     />
 
                     <div className="w-full flex justify-between items-center px-3 pb-2 pt-1">
-                        <span className="text-[11px] select-none" style={{ color: "var(--color-text-muted)" }}>
+                        <span className="text-[11px] select-none hidden md:flex" style={{ color: "var(--color-text-muted)" }}>
                             ↵ enter to send · shift+enter for new line
                         </span>
+
+                        <span className="text-[11px] select-none flex md:hidden" style={{ color: "var(--color-text-muted)" }}>
+                            Tap ↑ or ↵ to send
+                        </span>
+
 
                         {(isResponseGenerating || isAiResponding) ? (
                             <button

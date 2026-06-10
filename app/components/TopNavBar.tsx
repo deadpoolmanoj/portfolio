@@ -14,7 +14,7 @@ export const fallbackWeather: UserEnvironment = {
     time: '0',
 };
 
-function getWeatherIcon(condition?: string) {
+export function getWeatherIcon(condition?: string) {
     switch (condition) {
         case "Clear": return <Sun size={14} className="text-yellow-500" />;
         case "Cloudy": return <Cloud size={14} style={{ color: "var(--color-text-muted)" }} />;

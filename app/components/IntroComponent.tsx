@@ -5,6 +5,7 @@ import { Cloud, ChevronRight, RefreshCw, Clock } from "lucide-react";
 import { UserEnvironment } from "@/utils/userMetaData";
 import InputBar from "./InputBar";
 import { useConversation } from "@/context/ConversationContext";
+import { getWeatherIcon } from "./TopNavBar";
 
 const STATUSES = [
   "☕ Brewing coffee & writing clean code.",
@@ -62,6 +63,8 @@ export default function HomeIntro({ weather }: HomeIntroProps) {
     }, 150);
   };
 
+  const condition = weather?.weather ?? "Cloudy";
+
   return (
     <div className="w-full pt-12 md:pt-24 flex justify-center items-center px-4 pb-32 ">
       <div className="flex flex-col items-center w-full max-w-sm">
@@ -73,7 +76,7 @@ export default function HomeIntro({ weather }: HomeIntroProps) {
             border: "1px solid var(--color-border)",
           }}
         >
-          <Cloud size={20} style={{ color: "var(--color-text-secondary)" }} />
+          {getWeatherIcon(condition)}
         </div>
 
         {/* Context strip — weather + time */}

@@ -12,6 +12,8 @@ export default function ChatPageClient({ convoId }: { convoId: string }) {
 
   const conversation = conversations.find(c => c.id === convoId);
 
+  const noConversation = conversation?.messages.length > 0 ? false : true;
+  
   useEffect(() => {
     if (!conversation) {
       router.replace("/");
@@ -33,7 +35,7 @@ export default function ChatPageClient({ convoId }: { convoId: string }) {
         </div>
       </div>
 
-      <InputBar convoId={convoId} />
+      <InputBar convoId={convoId} isAtCenter={noConversation} />
     </div>
   );
 } 
