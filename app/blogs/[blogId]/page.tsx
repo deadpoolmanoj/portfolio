@@ -37,7 +37,7 @@ export default function BlogPage({ params }: BlogPageProps) {
 
     return (
         <div
-            className={`${lora.variable} ${inter.variable} min-h-screen pt-2`}
+            className={`${lora.variable} ${inter.variable} min-h-screen`}
             style={{ backgroundColor: "var(--color-bg-primary)" }}
         >
             {/* Header image / gradient hero */}
