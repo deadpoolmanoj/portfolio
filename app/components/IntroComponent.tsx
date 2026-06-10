@@ -7,18 +7,18 @@ import InputBar from "./InputBar";
 import { useConversation } from "@/context/ConversationContext";
 
 const STATUSES = [
-  "☕ Brewing coffee & debugging linked lists.",
-  "📐 Designing a new bento layout.",
-  "🎧 Deep in a coding session with lo-fi on.",
-  "🔍 Reviewing a pull request from last night.",
-  "🌙 Planning tomorrow's dev tasks.",
+  "☕ Brewing coffee & writing clean code.",
+  "🎧 Lo-fi on. Deep in a coding session.",
+  "🔍 Debugging something I wrote last night.",
+  "🌙 Planning tomorrow's build.",
+  "⚡ Pushing a new feature. Almost there.",
 ];
 
 const SUGGESTIONS = [
-  { emoji: "⚡", text: "Tell me about Manoj's technical background." },
-  { emoji: "📂", text: "What projects has he built recently?" },
-  { emoji: "📄", text: "Can I see or download a copy of his resume?" },
-  { emoji: "🧠", text: "How is his expertise in DSA?" },
+  { emoji: "⚡", text: " What's your tech stack and core skills?" },
+  { emoji: "📂", text: "Tell me about Skribbbly or Finovex." },
+  { emoji: "📄", text: "Can I see or download a copy of your resume?" },
+  { emoji: "🎓", text: "Where did you study and what's your background?" },
 ];
 
 interface Weather {
@@ -62,20 +62,28 @@ export default function HomeIntro({ weather }: HomeIntroProps) {
     }, 150);
   };
 
-  console.log('weather', weather);
-
-
   return (
     <div className="w-full pt-12 md:pt-24 flex justify-center items-center px-4 pb-32 ">
       <div className="flex flex-col items-center w-full max-w-sm">
 
+        <div
+          className="flex items-center justify-center w-10 h-10 rounded-2xl mb-4"
+          style={{
+            backgroundColor: "var(--color-bg-primary)",
+            border: "1px solid var(--color-border)",
+          }}
+        >
+          <Cloud size={20} style={{ color: "var(--color-text-secondary)" }} />
+        </div>
+
         {/* Context strip — weather + time */}
         <div className="flex items-center gap-2.5 mb-4">
+
           <div
             className="flex items-center gap-1.5 text-[11.5px]"
             style={{ color: "var(--color-text-secondary)" }}
           >
-            <Cloud size={13} />
+            {/* <Cloud size={13} /> */}
             {weather ? `${weather.city} ${weather.temperature}°C` : "Bengaluru —°C"}
           </div>
           <span style={{ color: "var(--color-border)" }}>·</span>
@@ -136,13 +144,13 @@ export default function HomeIntro({ weather }: HomeIntroProps) {
           className="text-[16px] font-semibold leading-snug mb-1 text-center"
           style={{ color: "var(--color-text-primary)" }}
         >
-          What would you like to know about Manoj?
+          What would you like to know about me?
         </h1>
         <p
           className="text-[12px] leading-relaxed mb-8 text-center"
           style={{ color: "var(--color-text-muted)" }}
         >
-          Ask me anything — his work, skills, or background.
+          Ask anything — my work, skills, or background.
         </p>
 
         {/* Suggestion chips */}

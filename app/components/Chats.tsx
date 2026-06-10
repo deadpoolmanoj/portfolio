@@ -12,6 +12,7 @@ import ResponseFooter from './ResponseFooter';
 import ChatBlogs from './ChatBlogs';
 import AskManoj from './AskManoj';
 import ChatResume from './ChatResume';
+import { useState } from "react";
 
 const Chats = ({ messages, convoId }: { messages: Message[]; convoId: string }) => {
     const lastScrolledUserMessage = useRef<string | null>(null);
@@ -98,8 +99,46 @@ const Chats = ({ messages, convoId }: { messages: Message[]; convoId: string }) 
     );
 };
 
+
+const animatedIds = new Set<string>(); // ← outside the hook, module-level
+
 const TextMsg = ({ message, convoId }: { message: Message; convoId: string }) => {
     const { startEditingMessage } = useConversation();
+    const content = message.content as string;
+    const [displayed, setDisplayed] = useState("");
+    const hasAnimated = useRef(false);
+    const bottomRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        if (message.role !== "assistant") {
+            setDisplayed(content);
+            return;
+        }
+
+        let i = 0;
+        let cancelled = false;
+
+        setDisplayed("");
+
+        const interval = setInterval(() => {
+            if (cancelled) return;
+            i++;
+            setDisplayed(content.slice(0, i));
+            if (i >= content.length) clearInterval(interval);
+        }, 8);
+
+        return () => {
+            cancelled = true;
+            clearInterval(interval);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (message.role === "assistant") {
+            bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+        }
+    }, [displayed]);
+
 
     return (
         <>
@@ -134,9 +173,11 @@ const TextMsg = ({ message, convoId }: { message: Message; convoId: string }) =>
                             ),
                         }}
                     >
-                        {message.content as string}
+                        {displayed}
                     </ReactMarkdown>
-                    <ResponseFooter messageId={message.id} convoId={convoId} feedback={message.feedback} />
+                    {displayed === content && (
+                        <ResponseFooter messageId={message.id} convoId={convoId} feedback={message.feedback} />
+                    )}
                 </div>
             ) : (
                 <div className='w-full flex items-end flex-col group mt-6'>

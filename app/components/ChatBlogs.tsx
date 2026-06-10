@@ -2,43 +2,8 @@
 
 import React from "react";
 import { BookOpen, ExternalLink, Clock } from "lucide-react";
-import { useRouter } from 'next/navigation';
-
-type Blog = {
-  title: string;
-  desc: string;
-  tag: string;
-  readTime: string;
-  image?: string;
-};
-
-const blogs: Blog[] = [
-  {
-    title: "Building an AI-powered portfolio like ChatGPT",
-    desc: "How I structured intent classification, dynamic components, and conversational UI.",
-    tag: "AI + Frontend",
-    readTime: "5 min",
-    image: "https://images.unsplash.com/photo-1555949963-aa79dcee981c?q=80&w=1600",
-  },
-  {
-    title: "Designing scalable React component systems",
-    desc: "My approach to building reusable UI blocks with clean architecture.",
-    tag: "React",
-    readTime: "6 min",
-  },
-  {
-    title: "From static resume to interactive experience",
-    desc: "Why portfolios should behave like products instead of documents.",
-    tag: "Product Thinking",
-    readTime: "4 min",
-  },
-  {
-    title: "How I structure backend APIs for scalability",
-    desc: "Patterns I use for clean Node.js + Express architecture.",
-    tag: "Backend",
-    readTime: "7 min",
-  },
-];
+import { useRouter } from "next/navigation";
+import { BLOGS } from "@/utils/blogs";
 
 const BlogMeta = ({ tag, readTime }: { tag: string; readTime: string }) => (
   <div className="flex items-center gap-3 mt-2 text-[10px]" style={{ color: "var(--color-text-muted)" }}>
@@ -59,7 +24,7 @@ const BlogMeta = ({ tag, readTime }: { tag: string; readTime: string }) => (
   </div>
 );
 
-const FeaturedBlog = ({ blog }: { blog: Blog }) => {
+const FeaturedBlog = ({ blog }: { blog: (typeof BLOGS)[0] }) => {
   const router = useRouter();
 
   return (
@@ -69,13 +34,20 @@ const FeaturedBlog = ({ blog }: { blog: Blog }) => {
         border: "1px solid var(--color-border)",
         backgroundColor: "var(--color-bg-card)",
       }}
-      onClick={() => router.push('/blogs/blog1')}
+      onClick={() => router.push(`/blogs/${blog.id}`)}
     >
-      {blog.image && (
-        <div className="w-full h-40 overflow-hidden">
-          <img src={blog.image} alt={blog.title} className="w-full h-full object-cover" />
-        </div>
-      )}
+      <div className="w-full h-40 relative overflow-hidden">
+        <img
+          src={blog.headerImage}
+          alt={blog.title}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black/20" />
+        <span className="absolute bottom-3 left-3 text-2xl z-10">
+          {blog.headerEmoji}
+        </span>
+      </div>
+
       <div className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -83,9 +55,9 @@ const FeaturedBlog = ({ blog }: { blog: Blog }) => {
               {blog.title}
             </p>
             <p className="text-[11px] leading-relaxed mt-1" style={{ color: "var(--color-text-muted)" }}>
-              {blog.desc}
+              {blog.subtitle}
             </p>
-            <BlogMeta tag={blog.tag} readTime={blog.readTime} />
+            <BlogMeta tag={blog.tags[0]} readTime={blog.readTime} />
           </div>
           <ExternalLink size={14} style={{ color: "var(--color-text-muted)" }} className="mt-1 shrink-0" />
         </div>
@@ -94,33 +66,38 @@ const FeaturedBlog = ({ blog }: { blog: Blog }) => {
   );
 };
 
-const CompactBlog = ({ blog }: { blog: Blog }) => (
-  <div
-    className="p-3 rounded-xl cursor-pointer transition-colors"
-    style={{
-      border: "1px solid var(--color-border)",
-      backgroundColor: "var(--color-bg-card)",
-    }}
-    onMouseEnter={e => (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)"}
-    onMouseLeave={e => (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-card)"}
-  >
-    <div className="flex justify-between gap-2">
-      <div>
-        <p className="text-[12px] font-medium leading-snug" style={{ color: "var(--color-text-primary)" }}>
-          {blog.title}
-        </p>
-        <p className="text-[11px] leading-relaxed mt-1" style={{ color: "var(--color-text-muted)" }}>
-          {blog.desc}
-        </p>
-        <BlogMeta tag={blog.tag} readTime={blog.readTime} />
+const CompactBlog = ({ blog }: { blog: (typeof BLOGS)[0] }) => {
+  const router = useRouter();
+
+  return (
+    <div
+      className="p-3 rounded-xl cursor-pointer transition-colors"
+      style={{
+        border: "1px solid var(--color-border)",
+        backgroundColor: "var(--color-bg-card)",
+      }}
+      onClick={() => router.push(`/blogs/${blog.id}`)}
+      onMouseEnter={(e) => (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-subtle)"}
+      onMouseLeave={(e) => (e.currentTarget as HTMLElement).style.backgroundColor = "var(--color-bg-card)"}
+    >
+      <div className="flex justify-between gap-2">
+        <div>
+          <p className="text-[12px] font-medium leading-snug" style={{ color: "var(--color-text-primary)" }}>
+            {blog.title}
+          </p>
+          <p className="text-[11px] leading-relaxed mt-1" style={{ color: "var(--color-text-muted)" }}>
+            {blog.subtitle}
+          </p>
+          <BlogMeta tag={blog.tags[0]} readTime={blog.readTime} />
+        </div>
+        <ExternalLink size={14} style={{ color: "var(--color-text-muted)" }} className="mt-1 shrink-0" />
       </div>
-      <ExternalLink size={14} style={{ color: "var(--color-text-muted)" }} className="mt-1 shrink-0" />
     </div>
-  </div>
-);
+  );
+};
 
 const ChatBlogs = () => {
-  const [featured, ...rest] = blogs;
+  const [featured, ...rest] = BLOGS;
 
   return (
     <div className="w-full">
@@ -142,8 +119,7 @@ const ChatBlogs = () => {
           </p>
         </div>
         <p className="text-[12px] leading-relaxed" style={{ color: "var(--color-text-secondary)" }}>
-          Technical thoughts, system design notes, and product-building insights
-          from real-world development experience.
+          Honest write-ups on building real projects — what worked, what didn't, and what I'd do differently.
         </p>
       </div>
 
@@ -152,8 +128,8 @@ const ChatBlogs = () => {
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-        {rest.map((blog, idx) => (
-          <CompactBlog key={idx} blog={blog} />
+        {rest.map((blog) => (
+          <CompactBlog key={blog.id} blog={blog} />
         ))}
       </div>
 
@@ -166,10 +142,10 @@ const ChatBlogs = () => {
         }}
       >
         <p className="text-[11px] leading-relaxed" style={{ color: "var(--color-text-muted)" }}>
-          Writing more about{" "}
+          More posts coming on{" "}
           <span className="font-medium" style={{ color: "var(--color-text-primary)" }}>
-            system design, AI engineering, and frontend architecture
-          </span>.
+            real-time systems, AI engineering, and building in public.
+          </span>
         </p>
       </div>
     </div>

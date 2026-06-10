@@ -2,7 +2,58 @@ import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
 
-export default function Icon() {
+function getWeatherEmoji(temp: number, condition?: string): string {
+  if (condition) {
+    const c = condition.toLowerCase();
+    if (c.includes("rain") || c.includes("drizzle")) return "🌧️";
+    if (c.includes("cloud")) return "☁️";
+    if (c.includes("snow")) return "❄️";
+    if (c.includes("storm") || c.includes("thunder")) return "⛈️";
+    if (c.includes("mist") || c.includes("fog") || c.includes("haze")) return "🌫️";
+    if (c.includes("clear") || c.includes("sunny")) return temp > 30 ? "☀️" : "🌤️";
+  }
+
+  // Fallback to temperature
+  if (temp >= 35) return "🌡️";
+  if (temp >= 28) return "☀️";
+  if (temp >= 20) return "⛅";
+  return "🌥️";
+}
+
+export default async function Icon() {
+  let emoji = "🌤️"; // default
+
+  try {
+    // Using open-meteo — free, no API key needed
+    // Bengaluru coords as fallback
+    const geoRes = await fetch(
+      "https://geocoding-api.open-meteo.com/v1/search?name=Bengaluru&count=1"
+    );
+    const geoData = await geoRes.json();
+    const { latitude, longitude } = geoData.results[0];
+
+    const weatherRes = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,weathercode`
+    );
+    const weatherData = await weatherRes.json();
+
+    const temp = weatherData.current.temperature_2m;
+    const code = weatherData.current.weathercode;
+
+    // WMO weather codes → condition string
+    const condition =
+      code === 0 ? "clear" :
+      code <= 3 ? "cloud" :
+      code <= 49 ? "fog" :
+      code <= 69 ? "rain" :
+      code <= 79 ? "snow" :
+      code <= 99 ? "storm" : "cloud";
+
+    emoji = getWeatherEmoji(temp, condition);
+  } catch {
+    emoji = "🌤️";
+  }
+
   return new ImageResponse(
     (
       <div
@@ -18,7 +69,7 @@ export default function Icon() {
           overflow: "hidden",
         }}
       >
-        {/* Soft animated-style drifting glow */}
+        {/* Glow */}
         <div
           style={{
             position: "absolute",
@@ -30,7 +81,7 @@ export default function Icon() {
           }}
         />
 
-        {/* Inner pulse ring */}
+        {/* Inner ring */}
         <div
           style={{
             position: "absolute",
@@ -42,18 +93,14 @@ export default function Icon() {
           }}
         />
 
-        {/* Letter */}
+        {/* Weather emoji */}
         <div
           style={{
-            fontSize: 44,
-            fontWeight: 700,
-            color: "#1a1a1a",
-            fontFamily: "system-ui",
+            fontSize: 36,
             zIndex: 1,
-            letterSpacing: "-2px",
           }}
         >
-          M
+          {emoji}
         </div>
       </div>
     ),

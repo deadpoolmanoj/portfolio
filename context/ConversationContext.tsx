@@ -67,7 +67,7 @@ function getComponentForIntent(intent: string): ReactNode {
 
 export function ConversationProvider({ children }: { children: ReactNode }) {
 
-    const CHARACTER_LIMIT = 200;
+    const CHARACTER_LIMIT = 2000;
     const router = useRouter();
 
     const [conversations, setConversations] = useState<Conversation[]>([]);
